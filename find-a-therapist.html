@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find a Therapist — AbleSpace</title>
+<meta name="description" content="Browse occupational therapists practising across Ghana — search and filter by region, specialization, experience, and rating.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="find-therapist">
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<div class="util-bar" role="region" aria-label="Accessibility options">
+  <div class="container">
+    <div class="util-bar__label"><i class="fa-solid fa-shield-heart"></i> Built accessibility-first: adjust text size and contrast anytime</div>
+    <div class="util-controls">
+      <div class="util-group" role="group" aria-label="Text size">
+        <span class="gl">Text size</span>
+        <button type="button" data-size="normal" aria-pressed="true">Default</button>
+        <button type="button" data-size="large" aria-pressed="false">Large</button>
+        <button type="button" data-size="xlarge" aria-pressed="false">XL</button>
+      </div>
+      <button type="button" class="contrast-toggle" data-contrast-toggle aria-pressed="false">
+        <i class="fa-solid fa-circle-half-stroke"></i> <span class="contrast-label">High Contrast</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <span class="brand__mark"><i class="fa-solid fa-hand-holding-heart"></i></span>
+      <span>
+        <span class="brand__name">AbleSpace</span><br>
+        <span class="brand__tag">Supporting everyday independence</span>
+      </span>
+    </a>
+
+    <nav class="main-nav" aria-label="Primary">
+      <a href="index.html" data-nav="home"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="therapy-hub.html" data-nav="therapy-hub"><i class="fa-solid fa-book-open"></i> Therapy Hub</a>
+      <a href="daily-planner.html" data-nav="daily-planner"><i class="fa-solid fa-calendar-days"></i> Daily Planner</a>
+      <a href="find-a-therapist.html" data-nav="find-therapist" class="musa-link"><i class="fa-solid fa-user-doctor"></i> Find a Therapist</a>
+      <a href="contact.html" data-nav="contact"><i class="fa-solid fa-envelope"></i> Contact</a>
+    </nav>
+
+    <div class="auth-actions">
+      <div data-auth-guest style="display:flex; gap:10px;">
+        <a href="login.html" class="btn btn-outline btn-sm"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+        <a href="signup.html" class="btn btn-teal btn-sm"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+      </div>
+      <div class="user-pill show" data-auth-user style="display:none">
+        <span class="user-pill__avatar" data-user-initial>G</span>
+        <span class="user-pill__name" data-user-name>Guest</span>
+        <button type="button" data-logout title="Log out"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+      </div>
+    </div>
+
+    <button class="menu-toggle" data-menu-toggle aria-expanded="false" aria-label="Toggle menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+
+  <nav class="mobile-nav" data-mobile-nav aria-label="Mobile">
+    <a href="index.html" data-nav="home">Home</a>
+    <a href="therapy-hub.html" data-nav="therapy-hub">Therapy Hub</a>
+    <a href="daily-planner.html" data-nav="daily-planner">Daily Planner</a>
+    <a href="find-a-therapist.html" data-nav="find-therapist">Find a Therapist</a>
+    <a href="contact.html" data-nav="contact">Contact Us</a>
+    <div class="auth-actions">
+      <div data-auth-guest style="display:flex; gap:10px; width:100%;">
+        <a href="login.html" class="btn btn-outline btn-sm" style="flex:1">Login</a>
+        <a href="signup.html" class="btn btn-teal btn-sm" style="flex:1">Sign Up</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="page-hero">
+    <div class="container">
+      <span class="kicker"><i class="fa-solid fa-user-doctor"></i> Professional directory</span>
+      <h1>Find a Therapist</h1>
+      <p>Browse licensed occupational therapists practising across Ghana. Search by region, specialization, experience, or rating to find the right fit.</p>
+    </div>
+  </div>
+
+  <div class="section" style="padding-top:40px;">
+    <div class="container">
+
+      <div class="notice-box" style="margin-bottom:24px;">
+        <i class="fa-solid fa-circle-info"></i>
+        <span><strong>Prototype directory:</strong> the profiles below are fictional, generated for demonstration as part of a student project. Names, contact details, and reviews do not represent real individuals — please don't attempt to contact them.</span>
+      </div>
+
+      <div class="therapist-toolbar">
+        <div class="therapist-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <label for="t-search" class="visually-hidden">Search therapists by name or specialization</label>
+          <input type="text" id="t-search" placeholder="Search by name, specialization, or facility…" autocomplete="off">
+        </div>
+        <div class="therapist-filters">
+          <select id="t-filter-region" aria-label="Filter by region">
+            <option value="">All regions</option>
+          </select>
+          <select id="t-filter-spec" aria-label="Filter by specialization">
+            <option value="">All specializations</option>
+          </select>
+          <select id="t-filter-exp" aria-label="Filter by years of experience">
+            <option value="">Any experience</option>
+            <option value="10">10+ years</option>
+            <option value="5">5+ years</option>
+            <option value="0">Newly practising</option>
+          </select>
+          <select id="t-filter-rating" aria-label="Filter by rating">
+            <option value="">Any rating</option>
+            <option value="4.8">4.8+ stars</option>
+            <option value="4.5">4.5+ stars</option>
+          </select>
+        </div>
+      </div>
+
+      <p class="therapist-count" id="t-count"></p>
+      <div class="therapist-grid" id="therapist-grid"></div>
+    </div>
+  </div>
+
+  <!-- Profile modal -->
+  <div class="therapist-modal-overlay" id="t-modal">
+    <div class="therapist-modal" role="dialog" aria-modal="true" aria-labelledby="t-modal-name">
+      <div class="therapist-modal__head">
+        <button type="button" class="therapist-modal__close" id="t-modal-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+        <span class="therapist-avatar" id="t-modal-avatar" style="width:64px;height:64px;font-size:1.3rem;"></span>
+        <div>
+          <div id="t-modal-name" style="font-family:var(--font-display); font-weight:800; font-size:1.15rem;"></div>
+          <div id="t-modal-credentials" style="font-size:0.78rem; color:var(--teal-300); margin-top:3px;"></div>
+        </div>
+      </div>
+      <div class="therapist-modal__body">
+        <div id="t-modal-meta" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:6px;"></div>
+        <h4>About</h4>
+        <p id="t-modal-bio" style="font-size:0.92rem; color:var(--ink-700); line-height:1.6;"></p>
+        <h4>Specializations</h4>
+        <div id="t-modal-specs" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+        <h4>Contact</h4>
+        <p style="font-size:0.9rem; color:var(--ink-700); margin-bottom:4px;"><i class="fa-solid fa-phone" style="width:18px; color:var(--teal-500);"></i> <span id="t-modal-phone"></span></p>
+        <p style="font-size:0.9rem; color:var(--ink-700);"><i class="fa-solid fa-envelope" style="width:18px; color:var(--teal-500);"></i> <span id="t-modal-email"></span></p>
+        <div style="display:flex; gap:12px; margin-top:24px;">
+          <button type="button" class="btn btn-primary btn-block" id="t-modal-book"><i class="fa-solid fa-calendar-check"></i> Book Appointment</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <span class="pill-status"><i class="fa-solid fa-circle" style="color:var(--success-500); font-size:8px;"></i> System status: operational</span>
+        <span class="pill-status"><i class="fa-solid fa-shield-check" style="color:var(--teal-700);"></i> Screen reader &amp; voice assist active</span>
+      </div>
+      <div class="pill-status" style="background:none; border:none;">WCAG 2.1 AA design target</div>
+    </div>
+
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="brand"><span class="brand__mark"><i class="fa-solid fa-hand-holding-heart"></i></span><span class="brand__name">AbleSpace</span></a>
+        <p>AbleSpace is a digital occupational therapy companion that supports independence and everyday participation through education, routine tools, and AI-supported guidance.</p>
+        <div class="notice-box">
+          <i class="fa-solid fa-shield-heart"></i>
+          <span><strong>Healthcare notice:</strong> Musa and AbleSpace provide supportive educational resources only. They do not replace diagnosis, assessment, or treatment by a licensed occupational therapist.</span>
+        </div>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="therapy-hub.html">Therapy Hub</a></li>
+          <li><a href="daily-planner.html">Daily Planner</a></li>
+          <li><a href="ask-musa.html">Ask Musa</a></li>
+          <li><a href="find-a-therapist.html">Find a Therapist</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Account</h4>
+        <ul>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="signup.html">Sign up</a></li>
+          <li><a href="contact.html">Contact us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Follow</h4>
+        <ul>
+          <li><a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a></li>
+          <li><a href="#"><i class="fa-brands fa-linkedin"></i> LinkedIn</a></li>
+          <li><a href="#"><i class="fa-brands fa-x-twitter"></i> X</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">&copy; 2026 AbleSpace — a student project built with occupational therapy at its core. Not a substitute for professional medical advice.</div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script src="assets/js/therapist-data.js"></script>
+<script src="assets/js/find-a-therapist.js"></script>
+<script src="assets/js/musa-engine.js"></script>
+<script src="assets/js/musa-widget.js"></script>
+</body>
+</html>

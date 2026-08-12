@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up — AbleSpace</title>
+<meta name="description" content="Create your AbleSpace account.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="signup">
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<div class="util-bar" role="region" aria-label="Accessibility options">
+  <div class="container">
+    <div class="util-bar__label"><i class="fa-solid fa-shield-heart"></i> Built accessibility-first: adjust text size and contrast anytime</div>
+    <div class="util-controls">
+      <div class="util-group" role="group" aria-label="Text size">
+        <span class="gl">Text size</span>
+        <button type="button" data-size="normal" aria-pressed="true">Default</button>
+        <button type="button" data-size="large" aria-pressed="false">Large</button>
+        <button type="button" data-size="xlarge" aria-pressed="false">XL</button>
+      </div>
+      <button type="button" class="contrast-toggle" data-contrast-toggle aria-pressed="false">
+        <i class="fa-solid fa-circle-half-stroke"></i> <span class="contrast-label">High Contrast</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <span class="brand__mark"><i class="fa-solid fa-hand-holding-heart"></i></span>
+      <span>
+        <span class="brand__name">AbleSpace</span><br>
+        <span class="brand__tag">Supporting everyday independence</span>
+      </span>
+    </a>
+
+    <nav class="main-nav" aria-label="Primary">
+      <a href="index.html" data-nav="home"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="therapy-hub.html" data-nav="therapy-hub"><i class="fa-solid fa-book-open"></i> Therapy Hub</a>
+      <a href="daily-planner.html" data-nav="daily-planner"><i class="fa-solid fa-calendar-days"></i> Daily Planner</a>
+      <a href="find-a-therapist.html" data-nav="find-therapist" class="musa-link"><i class="fa-solid fa-user-doctor"></i> Find a Therapist</a>
+      <a href="contact.html" data-nav="contact"><i class="fa-solid fa-envelope"></i> Contact</a>
+    </nav>
+
+    <div class="auth-actions">
+      <div data-auth-guest style="display:flex; gap:10px;">
+        <a href="login.html" class="btn btn-outline btn-sm"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+        <a href="signup.html" class="btn btn-teal btn-sm"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+      </div>
+      <div class="user-pill show" data-auth-user style="display:none">
+        <span class="user-pill__avatar" data-user-initial>G</span>
+        <span class="user-pill__name" data-user-name>Guest</span>
+        <button type="button" data-logout title="Log out"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+      </div>
+    </div>
+
+    <button class="menu-toggle" data-menu-toggle aria-expanded="false" aria-label="Toggle menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+
+  <nav class="mobile-nav" data-mobile-nav aria-label="Mobile">
+    <a href="index.html" data-nav="home">Home</a>
+    <a href="therapy-hub.html" data-nav="therapy-hub">Therapy Hub</a>
+    <a href="daily-planner.html" data-nav="daily-planner">Daily Planner</a>
+    <a href="find-a-therapist.html" data-nav="find-therapist">Find a Therapist</a>
+    <a href="contact.html" data-nav="contact">Contact Us</a>
+    <div class="auth-actions">
+      <div data-auth-guest style="display:flex; gap:10px; width:100%;">
+        <a href="login.html" class="btn btn-outline btn-sm" style="flex:1">Login</a>
+        <a href="signup.html" class="btn btn-teal btn-sm" style="flex:1">Sign Up</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="page-hero">
+    <div class="container">
+      <span class="kicker">Join AbleSpace</span>
+      <h1>Create your account</h1>
+      <p>Tell us a little about yourself so we can start pointing you toward the right resources.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <div class="form-card" style="max-width:520px;">
+        <div class="success-banner" data-signup-success><i class="fa-solid fa-circle-check"></i> Account created — welcome to AbleSpace!</div>
+
+        <form id="signup-form" novalidate>
+          <div class="form-field" id="field-name">
+            <label for="signup-name">Full name</label>
+            <input type="text" id="signup-name" name="fullName" placeholder="Jane Doe" autocomplete="name" required>
+            <p class="form-error">Please enter your full name.</p>
+          </div>
+
+          <div class="form-field" id="field-email">
+            <label for="signup-email">Email address</label>
+            <input type="email" id="signup-email" name="email" placeholder="you@example.com" autocomplete="email" required>
+            <p class="form-error">Enter a valid email address.</p>
+          </div>
+
+          <div class="form-field" id="field-password">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" name="password" placeholder="At least 6 characters" autocomplete="new-password" required minlength="6">
+            <p class="form-error">Password must be at least 6 characters.</p>
+          </div>
+
+          <div class="form-field" id="field-confirm">
+            <label for="signup-confirm">Confirm password</label>
+            <input type="password" id="signup-confirm" name="confirm" placeholder="Re-enter your password" autocomplete="new-password" required>
+            <p class="form-error">Passwords don't match.</p>
+          </div>
+
+          <div class="form-field">
+            <label for="signup-category">Condition category <span class="hint">(optional)</span></label>
+            <select id="signup-category" name="conditionCategory">
+              <option value="general">Prefer not to say</option>
+              <option value="neurological">Neurological (stroke, Parkinson's, TBI, MS)</option>
+              <option value="physical">Physical (arthritis, amputation, chronic pain)</option>
+              <option value="developmental">Developmental (autism, cerebral palsy, Down syndrome)</option>
+              <option value="age-related">Age-related (balance, memory, mobility)</option>
+              <option value="caregiver">Caregiver / family member</option>
+              <option value="student-professional">OT student / healthcare professional</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label class="checkbox-row"><input type="checkbox" name="updates" checked> Send me occasional tips from Musa and the AbleSpace team</label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">Create account <i class="fa-solid fa-arrow-right"></i></button>
+        </form>
+
+        <p class="form-foot">Already have an account? <a href="login.html">Log in</a></p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <span class="pill-status"><i class="fa-solid fa-circle" style="color:var(--success-500); font-size:8px;"></i> System status: operational</span>
+        <span class="pill-status"><i class="fa-solid fa-shield-check" style="color:var(--teal-700);"></i> Screen reader &amp; voice assist active</span>
+      </div>
+      <div class="pill-status" style="background:none; border:none;">WCAG 2.1 AA design target</div>
+    </div>
+
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="brand"><span class="brand__mark"><i class="fa-solid fa-hand-holding-heart"></i></span><span class="brand__name">AbleSpace</span></a>
+        <p>AbleSpace is a digital occupational therapy companion that supports independence and everyday participation through education, routine tools, and AI-supported guidance.</p>
+        <div class="notice-box">
+          <i class="fa-solid fa-shield-heart"></i>
+          <span><strong>Healthcare notice:</strong> Musa and AbleSpace provide supportive educational resources only. They do not replace diagnosis, assessment, or treatment by a licensed occupational therapist.</span>
+        </div>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="therapy-hub.html">Therapy Hub</a></li>
+          <li><a href="daily-planner.html">Daily Planner</a></li>
+          <li><a href="ask-musa.html">Ask Musa</a></li>
+          <li><a href="find-a-therapist.html">Find a Therapist</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Account</h4>
+        <ul>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="signup.html">Sign up</a></li>
+          <li><a href="contact.html">Contact us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Follow</h4>
+        <ul>
+          <li><a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a></li>
+          <li><a href="#"><i class="fa-brands fa-linkedin"></i> LinkedIn</a></li>
+          <li><a href="#"><i class="fa-brands fa-x-twitter"></i> X</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">&copy; 2026 AbleSpace — a student project built with occupational therapy at its core. Not a substitute for professional medical advice.</div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/musa-engine.js"></script>
+<script src="assets/js/musa-widget.js"></script>
+</body>
+</html>

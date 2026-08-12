@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Planner — AbleSpace</title>
+<meta name="description" content="Organise your routine, set goals, track tasks, and log mood and energy.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="daily-planner">
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<div class="util-bar" role="region" aria-label="Accessibility options">
+  <div class="container">
+    <div class="util-bar__label"><i class="fa-solid fa-shield-heart"></i> Built accessibility-first: adjust text size and contrast anytime</div>
+    <div class="util-controls">
+      <div class="util-group" role="group" aria-label="Text size">
+        <span class="gl">Text size</span>
+        <button type="button" data-size="normal" aria-pressed="true">Default</button>
+        <button type="button" data-size="large" aria-pressed="false">Large</button>
+        <button type="button" data-size="xlarge" aria-pressed="false">XL</button>
+      </div>
+      <button type="button" class="contrast-toggle" data-contrast-toggle aria-pressed="false">
+        <i class="fa-solid fa-circle-half-stroke"></i> <span class="contrast-label">High Contrast</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <span class="brand__mark"><i class="fa-solid fa-hand-holding-heart"></i></span>
+      <span>
+        <span class="brand__name">AbleSpace</span><br>
+        <span class="brand__tag">Supporting everyday independence</span>
+      </span>
+    </a>
+
+    <nav class="main-nav" aria-label="Primary">
+      <a href="index.html" data-nav="home"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="therapy-hub.html" data-nav="therapy-hub"><i class="fa-solid fa-book-open"></i> Therapy Hub</a>
+      <a href="daily-planner.html" data-nav="daily-planner"><i class="fa-solid fa-calendar-days"></i> Daily Planner</a>
+      <a href="find-a-therapist.html" data-nav="find-therapist" class="musa-link"><i class="fa-solid fa-user-doctor"></i> Find a Therapist</a>
+      <a href="contact.html" data-nav="contact"><i class="fa-solid fa-envelope"></i> Contact</a>
+    </nav>
+
+    <div class="auth-actions">
+      <div data-auth-guest style="display:flex; gap:10px;">
+        <a href="login.html" class="btn btn-outline btn-sm"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+        <a href="signup.html" class="btn btn-teal btn-sm"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+      </div>
+      <div class="user-pill show" data-auth-user style="display:none">
+        <span class="user-pill__avatar" data-user-initial>G</span>
+        <span class="user-pill__name" data-user-name>Guest</span>
+        <button type="button" data-logout title="Log out"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+      </div>
+    </div>
+
+    <button class="menu-toggle" data-menu-toggle aria-expanded="false" aria-label="Toggle menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+
+  <nav class="mobile-nav" data-mobile-nav aria-label="Mobile">
+    <a href="index.html" data-nav="home">Home</a>
+    <a href="therapy-hub.html" data-nav="therapy-hub">Therapy Hub</a>
+    <a href="daily-planner.html" data-nav="daily-planner">Daily Planner</a>
+    <a href="find-a-therapist.html" data-nav="find-therapist">Find a Therapist</a>
+    <a href="contact.html" data-nav="contact">Contact Us</a>
+    <div class="auth-actions">
+      <div data-auth-guest style="display:flex; gap:10px; width:100%;">
+        <a href="login.html" class="btn btn-outline btn-sm" style="flex:1">Login</a>
+        <a href="signup.html" class="btn btn-teal btn-sm" style="flex:1">Sign Up</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="page-hero">
+    <div class="container">
+      <span class="kicker"><i class="fa-solid fa-calendar-days"></i> Routine support</span>
+      <h1>Daily Planner</h1>
+      <p>Organise your schedule, set goals, track tasks, and check in on mood and energy — everything is saved to this browser.</p>
+    </div>
+  </div>
+
+  <div class="section" style="padding-top:40px;">
+    <div class="container">
+
+      <div class="stat-strip">
+        <div class="stat-box"><div class="stat-box__num" id="stat-tasks">0/0</div><div class="stat-box__label">Tasks completed today</div></div>
+        <div class="stat-box"><div class="stat-box__num" id="stat-goals">0%</div><div class="stat-box__label">Average goal progress</div></div>
+        <div class="stat-box"><div class="stat-box__num" id="stat-mood">—</div><div class="stat-box__label">Latest mood</div></div>
+        <div class="stat-box"><div class="stat-box__num" id="stat-checkins">0</div><div class="stat-box__label">Check-ins logged</div></div>
+      </div>
+
+      <div class="planner-tabs">
+        <button type="button" class="planner-tab active" data-panel="panel-schedule">Schedule</button>
+        <button type="button" class="planner-tab" data-panel="panel-goals">Goals</button>
+        <button type="button" class="planner-tab" data-panel="panel-mood">Mood &amp; energy</button>
+      </div>
+
+      <!-- Schedule -->
+      <div class="planner-panel active" id="panel-schedule">
+        <form class="add-task-form" id="add-task-form">
+          <input type="text" id="new-task-title" placeholder="Add a task, e.g. 'Practice one-handed dressing'" required>
+          <select id="new-task-slot">
+            <option>Morning</option><option>Afternoon</option><option>Evening</option><option>Night</option>
+          </select>
+          <select id="new-task-cat">
+            <option>ADL Routine</option><option>Therapy Exercise</option><option>Medication</option>
+            <option>Meals</option><option>Work &amp; Study</option><option>Rest Period</option>
+          </select>
+          <button type="submit" class="btn btn-teal btn-sm"><i class="fa-solid fa-plus"></i> Add task</button>
+        </form>
+        <div id="schedule-list"></div>
+      </div>
+
+      <!-- Goals -->
+      <div class="planner-panel" id="panel-goals">
+        <form class="add-task-form" id="add-goal-form">
+          <input type="text" id="new-goal-title" placeholder="Set a goal, e.g. 'Walk safely for 10 minutes'" required>
+          <input type="number" id="new-goal-target" placeholder="Target days" min="1" max="30" style="width:120px;">
+          <select id="new-goal-cat">
+            <option>ADLs</option><option>Fine motor</option><option>Mobility</option><option>Home safety</option>
+          </select>
+          <button type="submit" class="btn btn-teal btn-sm"><i class="fa-solid fa-plus"></i> Add goal</button>
+        </form>
+        <div id="goals-list"></div>
+      </div>
+
+      <!-- Mood & energy -->
+      <div class="planner-panel" id="panel-mood">
+        <form id="mood-form">
+          <p style="font-weight:700; font-size:0.86rem; margin-bottom:12px;">How are you feeling right now?</p>
+          <div class="mood-grid">
+            <button type="button" class="mood-opt" data-mood="Calm"><span class="emoji">😌</span>Calm</button>
+            <button type="button" class="mood-opt" data-mood="Empowered"><span class="emoji">💪</span>Empowered</button>
+            <button type="button" class="mood-opt" data-mood="Motivated"><span class="emoji">✨</span>Motivated</button>
+            <button type="button" class="mood-opt" data-mood="Tired"><span class="emoji">😴</span>Tired</button>
+            <button type="button" class="mood-opt" data-mood="Anxious"><span class="emoji">😟</span>Anxious</button>
+          </div>
+
+          <div class="slider-field">
+            <label for="energy-slider"><span>Energy level</span> <span id="energy-val">3/5</span></label>
+            <input type="range" id="energy-slider" min="1" max="5" value="3" oninput="document.getElementById('energy-val').textContent=this.value+'/5'">
+          </div>
+          <div class="slider-field">
+            <label for="fatigue-slider"><span>Fatigue level</span> <span id="fatigue-val">3/5</span></label>
+            <input type="range" id="fatigue-slider" min="1" max="5" value="3" oninput="document.getElementById('fatigue-val').textContent=this.value+'/5'">
+          </div>
+
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Log check-in</button>
+        </form>
+
+        <h4 style="margin:26px 0 10px; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--ink-500);">Recent check-ins</h4>
+        <div class="mood-log" id="mood-log"></div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <span class="pill-status"><i class="fa-solid fa-circle" style="color:var(--success-500); font-size:8px;"></i> System status: operational</span>
+        <span class="pill-status"><i class="fa-solid fa-shield-check" style="color:var(--teal-700);"></i> Screen reader &amp; voice assist active</span>
+      </div>
+      <div class="pill-status" style="background:none; border:none;">WCAG 2.1 AA design target</div>
+    </div>
+
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="brand"><span class="brand__mark"><i class="fa-solid fa-hand-holding-heart"></i></span><span class="brand__name">AbleSpace</span></a>
+        <p>AbleSpace is a digital occupational therapy companion that supports independence and everyday participation through education, routine tools, and AI-supported guidance.</p>
+        <div class="notice-box">
+          <i class="fa-solid fa-shield-heart"></i>
+          <span><strong>Healthcare notice:</strong> Musa and AbleSpace provide supportive educational resources only. They do not replace diagnosis, assessment, or treatment by a licensed occupational therapist.</span>
+        </div>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="therapy-hub.html">Therapy Hub</a></li>
+          <li><a href="daily-planner.html">Daily Planner</a></li>
+          <li><a href="ask-musa.html">Ask Musa</a></li>
+          <li><a href="find-a-therapist.html">Find a Therapist</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Account</h4>
+        <ul>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="signup.html">Sign up</a></li>
+          <li><a href="contact.html">Contact us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Follow</h4>
+        <ul>
+          <li><a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a></li>
+          <li><a href="#"><i class="fa-brands fa-linkedin"></i> LinkedIn</a></li>
+          <li><a href="#"><i class="fa-brands fa-x-twitter"></i> X</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">&copy; 2026 AbleSpace — a student project built with occupational therapy at its core. Not a substitute for professional medical advice.</div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script src="assets/js/planner.js"></script>
+<script src="assets/js/musa-engine.js"></script>
+<script src="assets/js/musa-widget.js"></script>
+</body>
+</html>
