@@ -314,10 +314,17 @@ p{ margin:0; }
 .dark-panel{ background:var(--teal-950); color:#fff; border-radius:var(--radius-lg); padding:48px 40px; }
 .dark-panel .section-head p{ color:var(--teal-200); }
 .dark-panel .kicker{ background:rgba(255,255,255,0.1); color:var(--teal-200); }
-.user-tag{ background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); border-radius:16px; padding:16px; text-align:center; transition:border-color .15s; }
+.user-tag{ background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); border-radius:16px; padding:14px 12px; text-align:center; transition:border-color .15s; display:flex; flex-direction:column; justify-content:center; align-items:center; }
 .user-tag:hover{ border-color:var(--teal-500); }
 .user-tag__label{ font-weight:800; font-size:0.85rem; color:var(--teal-300); margin-bottom:6px; }
 .user-tag__desc{ font-size:0.76rem; color:var(--sand-200); }
+
+/* Use flexbox for the dark-panel items so they wrap cleanly on narrow screens */
+.dark-panel .grid-4{ display:flex; flex-wrap:wrap; gap:14px; align-items:stretch; }
+.dark-panel .user-tag{ flex:1 1 150px; min-width:120px; max-width:260px; }
+@media (max-width:640px){
+  .dark-panel .user-tag{ flex:1 1 100%; max-width:none; }
+}
 
 .testimonial{ background:#fff; border:1px solid var(--sand-200); border-radius:var(--radius-md); padding:26px; box-shadow:var(--shadow-sm); }
 .testimonial blockquote{ font-style:italic; color:var(--ink-700); font-size:0.94rem; margin:0 0 20px; }
