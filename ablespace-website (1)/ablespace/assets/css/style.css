@@ -133,17 +133,76 @@ p{ margin:0; }
 .brand__name{ font-family:var(--font-display); font-weight:700; font-size:1.4rem; color:var(--ink-900); }
 .brand__tag{ font-size:0.72rem; color:var(--ink-500); font-weight:600; }
 
-.main-nav{ display:flex; align-items:center; gap:4px; background:var(--sand-50); border:1px solid var(--sand-200); border-radius:16px; padding:5px; }
+.brand__name{ font-family:var(--font-display); font-weight:700; font-size:clamp(1rem, 1.6vw, 1.2rem); color:var(--ink-900); line-height:1; }
+.brand__tag{ font-size:clamp(0.62rem, 1.2vw, 0.72rem); color:var(--ink-500); font-weight:600; }
+
+.main-nav{
+    flex:1;
+
+    display:flex;
+    align-items:center;
+
+    gap:10px;
+
+    padding:8px;
+
+    overflow-x:auto;
+    overflow-y:hidden;
+
+    scrollbar-width:thin;
+
+    white-space:nowrap;
+
+    background:var(--sand-50);
+
+    border:1px solid var(--sand-200);
+
+    border-radius:18px;
+
+    scroll-behavior:smooth;
+}
+
+/* Chrome */
+.main-nav::-webkit-scrollbar{
+    height:6px;
+}
+
+.main-nav::-webkit-scrollbar-thumb{
+    background:rgba(0,0,0,.2);
+    border-radius:999px;
+}
 .main-nav a{
-  display:flex; align-items:center; gap:7px; padding:9px 15px; border-radius:11px; font-weight:600; font-size:0.9rem;
-  color:var(--ink-700); transition:background .15s, color .15s;
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:8px;
+
+    padding:12px 18px;
+
+    border-radius:12px;
+
+    font-weight:600;
+    font-size:clamp(.88rem,1vw,.95rem);
+
+    text-decoration:none;
+    color:var(--ink-700);
+
+    white-space:nowrap;
+
+    flex:0 0 auto;
+
+    transition:background .2s,color .2s;
 }
 .main-nav a:hover{ background:rgba(15,110,86,0.08); color:var(--teal-800); }
 .main-nav a.active{ background:#fff; color:var(--teal-700); box-shadow:var(--shadow-sm); }
 .main-nav a.musa-link{ color:var(--coral-700); }
 .main-nav a.musa-link.active{ color:var(--coral-700); }
 
-.auth-actions{ display:flex; align-items:center; gap:10px; }
+.brand{ flex:0 0 auto; }
+.auth-actions{ display:flex; align-items:center; gap:10px; flex:0 0 auto; }
+.auth-actions a{ white-space:nowrap; }
 .user-pill{ display:none; align-items:center; gap:10px; background:var(--sand-50); border:1px solid var(--sand-200); border-radius:16px; padding:6px 8px 6px 6px; }
 .user-pill.show{ display:flex; }
 .user-pill__avatar{ width:32px; height:32px; border-radius:50%; background:var(--teal-700); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem; }
@@ -759,9 +818,46 @@ html, body{ max-width:100%; overflow-x:hidden; }
 img, video, table{ max-width:100%; }
 * { min-width:0; }
 
-/* Mobile nav drawer */
-.mobile-nav{ display:none; flex-direction:column; gap:4px; background:#fff; border-top:1px solid var(--sand-200); padding:16px 24px 24px; }
-.mobile-nav.open{ display:flex; }
+/* Mobile nav drawer — animate open/close via max-height & opacity */
+.mobile-nav{
+  display:flex; flex-direction:column; gap:4px; background:#fff; border-top:1px solid var(--sand-200);
+  padding:0 24px; max-height:0; opacity:0; overflow:hidden;
+  transition: max-height .36s cubic-bezier(.2,.9,.2,1), opacity .28s ease, padding .28s ease;
+}
+.mobile-nav.open{
+  max-height:640px; padding:16px 24px 24px; opacity:1;
+}
 .mobile-nav a{ padding:12px 10px; border-radius:10px; font-weight:600; color:var(--ink-700); }
 .mobile-nav a.active{ background:var(--teal-50); color:var(--teal-800); }
 .mobile-nav .auth-actions{ margin-top:10px; padding-top:14px; border-top:1px solid var(--sand-100); }
+
+/* When users select larger accessibility text sizes, prefer showing the
+   full desktop nav and hide the hamburger so links remain visible. This
+   overrides the mobile-collapse behavior when the user requests large text. */
+.main-nav{ transition: max-height .32s ease, opacity .28s ease, transform .28s ease, padding .28s ease; }
+html.text-size-large .main-nav,
+html.text-size-xlarge .main-nav{
+  display:flex !important; max-height:none !important; opacity:1 !important;
+  transform:none !important; overflow-x:auto !important; pointer-events:auto !important;
+}
+html.text-size-large .menu-toggle,
+html.text-size-xlarge .menu-toggle{
+  display:none !important; opacity:0 !important; pointer-events:none !important;
+}
+/* Keep header spacing balanced when showing full nav for large text */
+html.text-size-large .site-header .container,
+html.text-size-xlarge .site-header .container{
+  gap:18px;
+}
+
+/* When showing the desktop nav for large text, allow horizontal scrolling
+   inside the nav so items remain inline but accessible. */
+html.text-size-large .main-nav,
+html.text-size-xlarge .main-nav{
+  overflow-x:auto; -webkit-overflow-scrolling:touch; scroll-behavior:smooth;
+}
+/* Subtle scrollbar styling for modern browsers */
+.main-nav::-webkit-scrollbar{ height:8px; }
+.main-nav::-webkit-scrollbar-thumb{ background:rgba(34,31,26,0.12); border-radius:999px; }
+.main-nav{ scroll-snap-type:x proximity; }
+.main-nav a{ scroll-snap-align:center; }

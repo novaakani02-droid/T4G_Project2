@@ -7,10 +7,38 @@
   const scales = { normal: 1, large: 1.15, xlarge: 1.3 };
   function applyFontSize(size) {
     root.style.setProperty('--text-scale', scales[size] || 1);
+    // Add a helper class so CSS can respond to accessibility text-size changes
+    root.classList.toggle('text-size-large', size === 'large');
+    root.classList.toggle('text-size-xlarge', size === 'xlarge');
     document.querySelectorAll('[data-size]').forEach((btn) => {
       btn.setAttribute('aria-pressed', btn.dataset.size === size ? 'true' : 'false');
     });
     localStorage.setItem('ablespace_fontsize', size);
+
+    // If large or xlarge, ensure the desktop nav can be scrolled horizontally
+    // and auto-scroll the active link into view with a smooth animation.
+    try {
+      if (size === 'large' || size === 'xlarge') {
+        const mainNav = document.querySelector('.main-nav');
+        const active = mainNav && mainNav.querySelector('a.active');
+        if (mainNav) {
+          mainNav.style.overflowX = 'auto';
+          // allow layout updates then scroll
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            if (active && typeof active.scrollIntoView === 'function') {
+              active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            } else if (mainNav) {
+              mainNav.scrollTo({ left: 0, behavior: 'smooth' });
+            }
+          }));
+        }
+      } else {
+        const mainNav = document.querySelector('.main-nav');
+        if (mainNav) mainNav.style.overflowX = '';
+      }
+    } catch (e) {
+      // silent fallback
+    }
   }
   const savedSize = localStorage.getItem('ablespace_fontsize') || 'normal';
   applyFontSize(savedSize);
