@@ -106,11 +106,11 @@ p{ margin:0; }
 .util-group{ display:flex; align-items:center; gap:2px; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:999px; padding:3px; }
 .util-group span.gl{ padding:0 8px; font-weight:600; color:var(--teal-200); font-size:0.75rem; }
 .util-group button{
-  background:none; border:none; color:var(--sand-100); font-weight:700; font-size:0.72rem;
+  background:none; border:none; color:#FFD166; font-weight:700; font-size:0.72rem;
   padding:5px 12px; border-radius:999px; transition:background .15s, color .15s;
 }
 .util-group button[aria-pressed="true"]{ background:var(--teal-500); color:#04241C; }
-.util-group button:hover:not([aria-pressed="true"]){ background:rgba(255,255,255,0.12); }
+.util-group button:hover:not([aria-pressed="true"]){ background:rgba(255,255,255,0.12); color:#FFD166; }
 .contrast-toggle{
   display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12);
   color:var(--sand-100); font-weight:700; font-size:0.72rem; padding:7px 14px; border-radius:999px; transition:background .15s;
@@ -210,7 +210,11 @@ p{ margin:0; }
 .user-pill button{ background:none; border:none; color:var(--ink-500); padding:4px; border-radius:8px; }
 .user-pill button:hover{ color:var(--coral-700); background:var(--coral-50); }
 
-.menu-toggle{ display:none; background:none; border:1px solid var(--sand-200); border-radius:10px; padding:8px; }
+.menu-toggle{
+  display:none; align-items:center; justify-content:center; width:46px; height:46px; border-radius:50%;
+  background:#fff; border:1.5px solid var(--sand-200); color:var(--ink-900); padding:0; box-shadow:var(--shadow-sm);
+}
+.menu-toggle i{ font-size:1.1rem; }
 
 /* ---------- Buttons ---------- */
 .btn{
@@ -365,7 +369,8 @@ p{ margin:0; }
   padding:14px 16px; border-radius:14px; font-weight:600; font-size:0.88rem; margin-bottom:20px;
 }
 .success-banner.show{ display:flex; }
-.notice-box{ display:flex; gap:12px; background:var(--amber-100); border:1px solid #E9C878; color:var(--amber-700); border-radius:16px; padding:16px 18px; font-size:0.85rem; }
+.notice-box{ display:flex; gap:12px; align-items:flex-start; background:var(--amber-100); border:1px solid #E9C878; color:var(--amber-700); border-radius:16px; padding:16px 18px; font-size:0.85rem; width:100%; max-width:100%; line-height:1.7; }
+.notice-box > span{ display:block; width:100%; text-align:justify; }
 .notice-box svg{ flex-shrink:0; margin-top:2px; }
 
 /* ---------- Ask Musa ---------- */
@@ -751,6 +756,7 @@ html.hc .main-nav a{ color:#fff; }
 html.hc .main-nav a.active{ background:#FFD166; color:#000; }
 html.hc .main-nav a.musa-link{ color:#FFD166; }
 html.hc .brand__mark{ background:#FFD166; color:#000; }
+html.hc .menu-toggle{ background:#0d5f4c; border-color:#0d5f4c; color:#fff; }
 html.hc .btn-primary, html.hc .btn-teal{ background:#FFD166; color:#000; box-shadow:none; }
 html.hc .btn-outline{ border-color:#FFD166; color:#fff; }
 html.hc .feature-card, html.hc .testimonial, html.hc .form-card, html.hc .activity-card, html.hc .chat-window, html.hc .musa-sidebar, html.hc .goal-card, html.hc .task-row, html.hc .stat-box, html.hc .musa-card, html.hc .modal, html.hc .add-task-form, html.hc .mood-log, html.hc .mood-opt{
@@ -790,14 +796,21 @@ html.hc .dark-panel{ background:#0D0D0D; border:1px solid #FFD166; }
   .therapy-hub-layout{ grid-template-columns:1fr; }
   .th-sidebar{ position:static; max-height:none; }
 }
+@media (max-width:1200px){
+  .main-nav{ display:none; }
+  .site-header .auth-actions{ display:none !important; }
+  .menu-toggle{ display:flex; }
+  .mobile-nav .auth-actions{ display:flex !important; width:100%; }
+  .mobile-nav [data-auth-guest]{ display:flex !important; width:100%; }
+  .mobile-nav [data-auth-user]{ display:none !important; }
+}
+
 @media (max-width:960px){
   .hero-grid{ grid-template-columns:1fr; }
   .musa-card--banner{ grid-template-columns:1fr; }
   .footer-grid{ grid-template-columns:repeat(2,1fr); }
   .musa-layout{ grid-template-columns:1fr; }
   .musa-sidebar{ position:static; }
-  .main-nav{ display:none; }
-  .menu-toggle{ display:flex; }
   .util-bar .container{ flex-direction:column; align-items:flex-start; gap:10px; }
 }
 
@@ -837,41 +850,32 @@ img, video, table{ max-width:100%; }
 
 /* Mobile nav drawer — animate open/close via max-height & opacity */
 .mobile-nav{
-  display:flex; flex-direction:column; gap:4px; background:#fff; border-top:1px solid var(--sand-200);
+  display:flex; flex-direction:column; gap:4px; background:#000; border-top:1px solid #FFD166;
   padding:0 24px; max-height:0; opacity:0; overflow:hidden;
   transition: max-height .36s cubic-bezier(.2,.9,.2,1), opacity .28s ease, padding .28s ease;
 }
 .mobile-nav.open{
   max-height:640px; padding:16px 24px 24px; opacity:1;
 }
-.mobile-nav a{ padding:12px 10px; border-radius:10px; font-weight:600; color:var(--ink-700); }
-.mobile-nav a.active{ background:var(--teal-50); color:var(--teal-800); }
-.mobile-nav .auth-actions{ margin-top:10px; padding-top:14px; border-top:1px solid var(--sand-100); }
+.mobile-nav a{ padding:12px 10px; border-radius:10px; font-weight:600; color:#FFD166; }
+.mobile-nav a.active{ background:#111; color:#FFD166; }
+.mobile-nav .auth-actions{ margin-top:10px; padding-top:14px; border-top:1px solid rgba(255,209,102,0.3); }
 
-/* When users select larger accessibility text sizes, prefer showing the
-   full desktop nav and hide the hamburger so links remain visible. This
-   overrides the mobile-collapse behavior when the user requests large text. */
+/* Keep the hamburger menu visible for larger accessibility text sizes so
+   the mobile menu pattern remains consistent across all text scales. */
 .main-nav{ transition: max-height .32s ease, opacity .28s ease, transform .28s ease, padding .28s ease; }
 html.text-size-large .main-nav,
 html.text-size-xlarge .main-nav{
-  display:flex !important; max-height:none !important; opacity:1 !important;
-  transform:none !important; overflow-x:auto !important; pointer-events:auto !important;
+  display:none !important; max-height:0 !important; opacity:0 !important;
+  transform:none !important; overflow:hidden !important; pointer-events:none !important;
 }
 html.text-size-large .menu-toggle,
 html.text-size-xlarge .menu-toggle{
-  display:none !important; opacity:0 !important; pointer-events:none !important;
+  display:flex !important; opacity:1 !important; pointer-events:auto !important;
 }
-/* Keep header spacing balanced when showing full nav for large text */
 html.text-size-large .site-header .container,
 html.text-size-xlarge .site-header .container{
-  gap:18px;
-}
-
-/* When showing the desktop nav for large text, allow horizontal scrolling
-   inside the nav so items remain inline but accessible. */
-html.text-size-large .main-nav,
-html.text-size-xlarge .main-nav{
-  overflow-x:auto; -webkit-overflow-scrolling:touch; scroll-behavior:smooth;
+  gap:12px;
 }
 /* Subtle scrollbar styling for modern browsers */
 .main-nav::-webkit-scrollbar{ height:8px; }
