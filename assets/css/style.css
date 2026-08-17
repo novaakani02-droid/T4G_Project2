@@ -219,8 +219,8 @@ p{ margin:0; }
   transition:transform .15s, box-shadow .15s, background .15s, color .15s; white-space:nowrap;
 }
 .btn:hover{ transform:translateY(-1px); }
-.btn-primary{ background:var(--coral-500); color:#fff; box-shadow:0 6px 16px rgba(216,90,48,0.28); }
-.btn-primary:hover{ background:var(--coral-700); }
+.btn-primary{ background:#F3C75A; color:#0E1A18; box-shadow:0 6px 16px rgba(243,199,90,0.24); border-color:#D8A72D; }
+.btn-primary:hover{ background:#0d5f4c; color:#fff; }
 .btn-teal{ background:var(--teal-700); color:#fff; box-shadow:0 6px 16px rgba(15,110,86,0.24); }
 .btn-teal:hover{ background:var(--teal-800); }
 .btn-outline{ background:transparent; border-color:var(--sand-300); color:var(--ink-900); }
@@ -255,7 +255,7 @@ p{ margin:0; }
 }
 .hero-card h1{ color:#fff; margin-bottom:22px; }
 .hero-card h1 em{ font-style:italic; color:var(--coral-300); font-weight:400; }
-.hero-card p{ color:var(--sand-100); font-size:1.08rem; max-width:480px; margin-bottom:34px; line-height:1.65; }
+.hero-card p{ color:#fff; font-size:1.08rem; max-width:480px; margin-bottom:34px; line-height:1.65; }
 .hero-card__actions{ display:flex; flex-wrap:wrap; gap:14px; }
 
 /* Musa info section — sits BELOW the hero, full width, own banner layout */
@@ -287,8 +287,8 @@ p{ margin:0; }
 .chat-bubble.from-user .chat-bubble__avatar{ background:var(--sand-200); color:var(--ink-700); }
 .chat-bubble.from-musa .chat-bubble__avatar{ background:var(--coral-500); color:#fff; }
 .chat-bubble__text{ background:#fff; padding:10px 13px; border-radius:14px; box-shadow:var(--shadow-sm); color:var(--ink-700); }
-.chat-bubble.from-user .chat-bubble__text{ border-top-left-radius:4px; }
-.chat-bubble.from-musa .chat-bubble__text{ border-top-right-radius:4px; }
+.chat-bubble.from-user .chat-bubble__text{ background:#dfeee6; color:#0b4b3b; border-top-left-radius:4px; }
+.chat-bubble.from-musa .chat-bubble__text{ background:#b9d9c3; color:#052a22; border-top-right-radius:4px; }
 
 /* ---------- Sections ---------- */
 .section{ padding:64px 0; }
@@ -574,34 +574,37 @@ html.hc .musa-fab-panel__head{ background:#000; border-bottom:1px solid #FFD166;
 .therapy-hub-layout{ display:grid; grid-template-columns:300px 1fr; gap:28px; align-items:start; }
 .th-sidebar{
   position:sticky; top:96px; max-height:calc(100vh - 116px); overflow-y:auto;
-  background:#fff; border:1px solid var(--sand-200); border-radius:var(--radius-md);
+  background:#f5f9f6; border:1px solid var(--teal-300); border-radius:var(--radius-md);
   padding:18px; box-shadow:var(--shadow-sm);
+}
+.th-question{
+  font-size:0.78rem; font-weight:800; color:#0d5f4c; margin-bottom:10px; letter-spacing:0.01em;
 }
 .th-search{ position:relative; margin-bottom:16px; }
 .th-search input{
-  width:100%; padding:11px 14px 11px 38px; border-radius:999px; border:1.5px solid var(--sand-200);
-  font-family:inherit; font-size:0.88rem; background:var(--sand-50);
+  width:100%; padding:11px 14px 11px 38px; border-radius:999px; border:1.5px solid #8cc9b8;
+  font-family:inherit; font-size:0.88rem; background:#fff; color:#084a3b;
 }
-.th-search input:focus{ outline:none; border-color:var(--teal-500); background:#fff; }
-.th-search i{ position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--ink-500); font-size:0.85rem; }
-.th-group{ margin-bottom:6px; border-top:1px solid var(--sand-100); padding-top:10px; }
+.th-search input:focus{ outline:none; border-color:#0d5f4c; background:#fff; box-shadow:0 0 0 3px rgba(13,95,76,0.08); }
+.th-search i{ position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#0d5f4c; font-size:0.85rem; }
+.th-group{ margin-bottom:6px; border-top:1px solid rgba(13,95,76,0.12); padding-top:10px; }
 .th-group:first-of-type{ border-top:none; padding-top:0; }
 .th-group__title{
   display:flex; align-items:center; justify-content:space-between; width:100%; background:none; border:none;
   padding:8px 4px; font-weight:800; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.04em;
-  color:var(--teal-800); cursor:pointer;
+  color:#0d5f4c; cursor:pointer;
 }
-.th-group__title i.chev{ transition:transform 0.18s ease; font-size:0.72rem; color:var(--ink-500); }
+.th-group__title i.chev{ transition:transform 0.18s ease; font-size:0.72rem; color:#0d5f4c; }
 .th-group.collapsed .th-group__title i.chev{ transform:rotate(-90deg); }
 .th-group.collapsed .th-group__list{ display:none; }
 .th-group__list{ display:flex; flex-direction:column; gap:2px; padding-bottom:8px; }
 .th-item-btn{
   display:flex; align-items:center; gap:10px; width:100%; text-align:left; background:none; border:none;
-  padding:9px 10px; border-radius:10px; font-size:0.86rem; color:var(--ink-700); font-weight:600;
+  padding:9px 10px; border-radius:10px; font-size:0.86rem; color:#0d5f4c; font-weight:700;
 }
-.th-item-btn i{ width:16px; color:var(--teal-500); font-size:0.85rem; flex-shrink:0; }
-.th-item-btn:hover{ background:var(--teal-50); }
-.th-item-btn.active{ background:var(--teal-700); color:#fff; }
+.th-item-btn i{ width:16px; color:#0f7b66; font-size:0.85rem; flex-shrink:0; }
+.th-item-btn:hover{ background:#edf8f4; color:#0a4d3d; }
+.th-item-btn.active{ background:#0d5f4c; color:#fff; }
 .th-item-btn.active i{ color:#fff; }
 .th-item-btn[hidden]{ display:none; }
 
@@ -657,22 +660,28 @@ html.hc .musa-fab-panel__head{ background:#000; border-bottom:1px solid #FFD166;
 }
 
 /* ---------- Find a Therapist directory ---------- */
-.therapist-toolbar{ background:#fff; border:1px solid var(--sand-200); border-radius:var(--radius-md); padding:20px; box-shadow:var(--shadow-sm); margin-bottom:28px; }
+.therapist-toolbar{ background:#f7f9f6; border:1px solid #8cc9b8; border-radius:var(--radius-md); padding:20px; box-shadow:var(--shadow-sm); margin-bottom:28px; }
 .therapist-search{ position:relative; margin-bottom:16px; }
-.therapist-search input{ width:100%; padding:13px 16px 13px 42px; border-radius:999px; border:1.5px solid var(--sand-200); font-family:inherit; font-size:0.94rem; background:var(--sand-50); }
-.therapist-search input:focus{ outline:none; border-color:var(--teal-500); background:#fff; }
-.therapist-search i{ position:absolute; left:16px; top:50%; transform:translateY(-50%); color:var(--ink-500); }
+.therapist-search input{ width:100%; padding:13px 16px 13px 42px; border-radius:999px; border:1.5px solid #8cc9b8; font-family:inherit; font-size:0.94rem; background:#fff; color:#0d5f4c; }
+.therapist-search input:focus{ outline:none; border-color:#0d5f4c; background:#fff; box-shadow:0 0 0 3px rgba(13,95,76,0.08); }
+.therapist-search i{ position:absolute; left:16px; top:50%; transform:translateY(-50%); color:#0d5f4c; }
 .therapist-filters{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
 .therapist-filters select{
-  width:100%; padding:10px 14px; border-radius:10px; border:1.5px solid var(--sand-200);
-  font-family:inherit; font-size:0.86rem; background:#fff; color:var(--ink-700);
+  width:100%; padding:10px 14px; border-radius:999px; border:1.5px solid #0d5f4c; font-family:inherit; font-size:0.86rem;
+  background:#0d5f4c; color:#fff; font-weight:800; appearance:none; -webkit-appearance:none; -moz-appearance:none;
+  background-image:linear-gradient(45deg, transparent 50%, #fff 50%), linear-gradient(135deg, #fff 50%, transparent 50%);
+  background-position:calc(100% - 18px) calc(50% - 2px), calc(100% - 12px) calc(50% - 2px);
+  background-size:6px 6px, 6px 6px; background-repeat:no-repeat;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,0.06);
 }
-.therapist-filters select:focus{ outline:none; border-color:var(--teal-500); }
-.therapist-count{ font-size:0.86rem; color:var(--ink-500); margin-bottom:18px; font-weight:600; }
+.therapist-filters select option{ color:#0b1f1b; background:#fff; }
+.therapist-filters select:focus{ outline:none; border-color:#0d5f4c; box-shadow:0 0 0 3px rgba(13,95,76,0.12); }
+.therapist-filters select:hover{ background:#0a4d3d; border-color:#0a4d3d; color:#fff; }
+.therapist-count{ font-size:0.86rem; color:#0d5f4c; margin-bottom:18px; font-weight:700; }
 
 .therapist-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; align-items:stretch; }
 .therapist-card{
-  background:#fff; border:1px solid var(--sand-200); border-radius:var(--radius-md); box-shadow:var(--shadow-sm);
+  background:#fff; border:1px solid #cfe7df; border-radius:var(--radius-md); box-shadow:var(--shadow-sm);
   padding:26px; display:flex; flex-direction:column; height:100%; transition:transform 0.18s ease, box-shadow 0.18s ease;
 }
 .therapist-card:hover{ transform:translateY(-5px); box-shadow:var(--shadow-md); }
@@ -681,16 +690,17 @@ html.hc .musa-fab-panel__head{ background:#000; border-bottom:1px solid #FFD166;
   width:58px; height:58px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center;
   color:#fff; font-weight:800; font-size:1.1rem; font-family:var(--font-display); box-shadow:var(--shadow-sm);
 }
-.therapist-card__name{ font-size:1.02rem; font-weight:800; color:var(--teal-950); font-family:var(--font-display); margin-bottom:3px; }
-.therapist-card__credentials{ font-size:0.74rem; color:var(--ink-500); line-height:1.4; }
+.therapist-card__name{ font-size:1.02rem; font-weight:800; color:#0d5f4c; font-family:var(--font-display); margin-bottom:3px; }
+.therapist-card__credentials{ font-size:0.74rem; color:#0d5f4c; line-height:1.4; }
 .therapist-card__meta{ display:flex; flex-wrap:wrap; gap:7px; margin:12px 0; }
-.therapist-card__facility{ font-size:0.85rem; color:var(--ink-700); margin-bottom:10px; display:flex; gap:7px; align-items:flex-start; }
-.therapist-card__facility i{ color:var(--teal-500); margin-top:3px; flex-shrink:0; }
-.therapist-rating{ display:flex; align-items:center; gap:6px; font-size:0.86rem; font-weight:700; color:var(--amber-700); margin-bottom:12px; }
+.therapist-card__facility{ font-size:0.85rem; color:#0d5f4c; margin-bottom:10px; display:flex; gap:7px; align-items:flex-start; }
+.therapist-card__facility i{ color:#0f7b66; margin-top:3px; flex-shrink:0; }
+.therapist-rating{ display:flex; align-items:center; gap:6px; font-size:0.86rem; font-weight:700; color:#0d5f4c; margin-bottom:12px; }
 .therapist-rating .stars i{ color:#F0A833; font-size:0.78rem; }
-.therapist-card__bio{ font-size:0.86rem; color:var(--ink-500); line-height:1.55; flex:1; margin-bottom:16px; }
+.therapist-card__bio{ font-size:0.86rem; color:#1a5b4d; line-height:1.55; flex:1; margin-bottom:16px; }
 .therapist-card__actions{ display:flex; gap:10px; margin-top:auto; }
-.therapist-card__actions .btn{ flex:1; padding:10px 14px; font-size:0.82rem; }
+.therapist-card__actions .btn{ flex:1; padding:10px 14px; font-size:0.82rem; border-radius:999px; background:#F3C75A; color:#0E1A18; border:1.5px solid #D8A72D; font-weight:800; }
+.therapist-card__actions .btn:hover{ background:#0d5f4c; color:#fff; }
 
 .therapist-modal-overlay{
   position:fixed; inset:0; background:rgba(5,42,34,0.55); z-index:1000; display:flex; align-items:center; justify-content:center;
