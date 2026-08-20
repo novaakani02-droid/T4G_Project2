@@ -655,6 +655,27 @@ html.hc .musa-fab-panel__head{ background:#000; border-bottom:1px solid #FFD166;
 
 .solution-card__foot{ padding:24px 32px; border-top:1px solid var(--sand-100); display:flex; gap:12px; flex-wrap:wrap; }
 
+.therapy-guide-modal{ position:fixed; inset:0; display:none; z-index:2000; }
+.therapy-guide-modal.open{ display:block; }
+.therapy-guide-modal__backdrop{ position:absolute; inset:0; background:rgba(5,42,34,0.6); }
+.therapy-guide-modal__dialog{
+  position:relative; z-index:1; width:min(560px, calc(100vw - 32px)); max-height:88vh; overflow:auto;
+  margin:48px auto; background:#fff; border-radius:22px; border:1px solid var(--sand-200); box-shadow:var(--shadow-lg);
+}
+.therapy-guide-modal__content{ padding:26px 24px 24px; }
+.therapy-guide-modal__eyebrow{ display:inline-block; background:var(--teal-50); color:var(--teal-700); font-size:0.7rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; padding:6px 10px; border-radius:999px; }
+.therapy-guide-modal__content h3{ margin:16px 0 10px; font-size:2rem; line-height:1.1; }
+.therapy-guide-modal__content p{ color:var(--ink-500); font-size:0.98rem; line-height:1.65; }
+.therapy-guide-modal__meta{ display:flex; flex-wrap:wrap; gap:10px; margin:18px 0; }
+.therapy-guide-modal__meta span{ display:inline-flex; align-items:center; gap:6px; padding:6px 10px; background:var(--sand-50); color:var(--ink-700); border-radius:999px; font-size:0.74rem; font-weight:700; }
+.therapy-guide-modal__section{ margin-top:20px; }
+.therapy-guide-modal__section h4{ font-size:0.82rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--teal-700); margin-bottom:8px; }
+.therapy-guide-modal__section ul{ display:flex; flex-direction:column; gap:8px; list-style:disc; padding-left:20px; color:var(--ink-700); }
+/* Video wrapper removed — Therapy Hub uses image and text-only guides */
+.therapy-guide-modal__actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
+.therapy-guide-modal__close{ position:absolute; right:14px; top:14px; width:36px; height:36px; border:none; border-radius:50%; background:rgba(255,255,255,0.12); color:#fff; }
+body.modal-open{ overflow:hidden; }
+
 @media (max-width:1024px){
   .popular-guides{ grid-template-columns:repeat(2,1fr); }
 }
@@ -662,6 +683,88 @@ html.hc .musa-fab-panel__head{ background:#000; border-bottom:1px solid #FFD166;
   .solution-grid{ grid-template-columns:1fr; }
   .solution-card__head, .solution-card__body, .solution-card__foot{ padding:22px; }
   .popular-guides{ grid-template-columns:1fr 1fr; }
+}
+
+.therapy-hub-page__hero{
+  background:linear-gradient(180deg, rgba(5,42,34,0.95), rgba(7,70,57,0.9));
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.therapy-hub-page__hero .container{ padding-top:52px; padding-bottom:52px; }
+.therapy-hub-page__hero h1{ color:#fff; margin-bottom:12px; }
+.therapy-hub-page__hero p{ color:var(--teal-200); max-width:52ch; font-size:1.1rem; }
+.therapy-hub-page__search{ position:relative; max-width:760px; margin-top:28px; }
+.therapy-hub-page__search input{
+  width:100%; border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.1); border-radius:999px;
+  color:#fff; padding:16px 18px 16px 52px; font-size:1rem; font-family:var(--font-body);
+}
+.therapy-hub-page__search input::placeholder{ color:rgba(255,255,255,0.8); }
+.therapy-hub-page__search i{ position:absolute; left:18px; top:50%; transform:translateY(-50%); color:#fff; }
+.therapy-hub-page__sections{ padding-top:32px; }
+.therapy-hub-page__notice{ margin-bottom:30px; }
+.therapy-hub-page__heading-row{ display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:20px; }
+.therapy-hub-page__heading-row h2{ font-size:clamp(1.8rem, 2.4vw, 2.6rem); }
+.therapy-hub-page__quickstart{ margin-bottom:42px; }
+.therapy-hub-page__category-grid{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:18px; }
+.therapy-hub-page__category{
+  display:flex; align-items:center; gap:14px; background:#fff; border:1px solid var(--sand-200); border-radius:18px;
+  padding:18px 18px; text-align:left; box-shadow:var(--shadow-sm); color:var(--ink-900); transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.therapy-hub-page__category:hover{ transform:translateY(-2px); border-color:var(--teal-500); box-shadow:var(--shadow-md); }
+.therapy-hub-page__category.is-active{ background:var(--teal-700); border-color:var(--teal-700); color:#fff; }
+.therapy-hub-page__category.is-active .therapy-hub-page__icon{ background:rgba(255,255,255,0.18); color:#fff; }
+.therapy-hub-page__category.is-active .therapy-hub-page__label{ color:#fff; }
+.therapy-hub-page__icon{ width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; background:var(--teal-50); color:var(--teal-700); font-size:1.1rem; }
+.therapy-hub-page__label{ font-weight:700; font-size:0.98rem; color:var(--ink-900); }
+.therapy-hub-page__resource-section{ margin-bottom:42px; }
+.therapy-hub-page__resource-grid{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:20px; }
+.therapy-hub-page__resource-card{ background:#fff; border:1px solid var(--sand-200); border-radius:22px; overflow:hidden; box-shadow:var(--shadow-sm); }
+.therapy-hub-page__resource-art{ display:flex; align-items:center; justify-content:center; min-height:170px; background:linear-gradient(135deg, var(--teal-700), var(--teal-500)); color:#fff; font-size:2.4rem; }
+.therapy-hub-page__resource-card img{ width:100%; height:180px; object-fit:cover; }
+.therapy-hub-page__resource-body{ padding:18px 18px 16px; }
+.therapy-hub-page__resource-tag{ display:inline-block; padding:6px 10px; border-radius:999px; font-size:0.72rem; font-weight:800; letter-spacing:0.04em; text-transform:uppercase; background:var(--teal-50); color:var(--teal-700); }
+.therapy-hub-page__resource-body h3{ margin-top:14px; margin-bottom:8px; font-size:1.35rem; line-height:1.2; }
+.therapy-hub-page__resource-body p{ color:var(--ink-500); font-size:0.92rem; line-height:1.6; }
+.therapy-hub-page__meta{ display:flex; flex-wrap:wrap; gap:12px; margin-top:14px; color:var(--ink-500); font-size:0.76rem; font-weight:700; }
+.therapy-hub-page__meta span{ display:inline-flex; align-items:center; gap:6px; }
+.therapy-hub-page__card-actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+.therapy-hub-page__empty-state{ grid-column:1 / -1; background:var(--sand-50); border:1.5px dashed var(--sand-300); border-radius:18px; padding:32px 24px; text-align:center; color:var(--ink-700); }
+.therapy-hub-page__empty-state h3{ margin-bottom:8px; }
+.therapy-hub-page__empty-state p{ color:var(--ink-500); }
+.therapy-hub-page__tag-row{ display:flex; flex-wrap:wrap; gap:10px; }
+.therapy-hub-page__tag{ background:var(--sand-50); border:1px solid var(--sand-200); color:var(--ink-700); border-radius:999px; padding:8px 14px; font-weight:700; }
+.therapy-hub-page__tag:hover{ background:var(--teal-50); border-color:var(--teal-300); color:var(--teal-800); }
+.therapy-hub-page__condition-strip{ margin-bottom:42px; }
+.therapy-hub-page__cta-panel,
+.therapy-hub-page__caregiver,
+.therapy-hub-page__need-support{
+  display:flex; align-items:center; justify-content:space-between; gap:20px; background:#fff; border:1px solid var(--sand-200); border-radius:22px; padding:26px 28px; box-shadow:var(--shadow-sm); margin-bottom:28px;
+}
+.therapy-hub-page__cta-panel h2,
+.therapy-hub-page__caregiver h2,
+.therapy-hub-page__need-support h2{ margin-bottom:8px; }
+.therapy-hub-page__cta-panel p,
+.therapy-hub-page__caregiver p,
+.therapy-hub-page__need-support p{ color:var(--ink-500); max-width:62ch; }
+.therapy-hub-page__caregiver,
+.therapy-hub-page__need-support{ align-items:flex-start; }
+.therapy-hub-page__notice{ background:var(--amber-100); border:1px solid #E9C878; }
+.therapy-hub-page__notice strong{ color:var(--amber-700); }
+.therapy-hub-page__notice i{ color:var(--amber-700); }
+@media (max-width:1024px){
+  .therapy-hub-page__category-grid,
+  .therapy-hub-page__resource-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width:640px){
+  .therapy-hub-page__hero .container{ padding-top:30px; padding-bottom:32px; }
+  .therapy-hub-page__hero h1{ font-size:2.2rem; }
+  .therapy-hub-page__category-grid,
+  .therapy-hub-page__resource-grid{ grid-template-columns:1fr; }
+  .therapy-hub-page__heading-row,
+  .therapy-hub-page__cta-panel,
+  .therapy-hub-page__caregiver,
+  .therapy-hub-page__need-support{ flex-direction:column; align-items:flex-start; }
+  .therapy-hub-page__resource-card img{ height:180px; }
+  .therapy-hub-page__notice{ width:100%; }
 }
 
 /* ---------- Find a Therapist directory ---------- */
@@ -796,10 +899,21 @@ html.hc .dark-panel{ background:#0D0D0D; border:1px solid #FFD166; }
   .therapy-hub-layout{ grid-template-columns:1fr; }
   .th-sidebar{ position:static; max-height:none; }
 }
+
+/* Desktop and laptop navigation: no hamburger on large screens */
+@media (min-width:1201px){
+  .main-nav{ display:flex !important; }
+  .site-header .auth-actions{ display:flex !important; }
+  .menu-toggle{ display:none !important; }
+  .mobile-nav{ display:none !important; }
+}
+
+/* Mobile/tablet navigation: show hamburger and hide desktop nav */
 @media (max-width:1200px){
-  .main-nav{ display:none; }
+  .main-nav{ display:none !important; }
   .site-header .auth-actions{ display:none !important; }
-  .menu-toggle{ display:flex; }
+  .menu-toggle{ display:flex !important; }
+  .mobile-nav{ display:flex !important; }
   .mobile-nav .auth-actions{ display:flex !important; width:100%; }
   .mobile-nav [data-auth-guest]{ display:flex !important; width:100%; }
   .mobile-nav [data-auth-user]{ display:none !important; }
@@ -861,18 +975,8 @@ img, video, table{ max-width:100%; }
 .mobile-nav a.active{ background:#111; color:#FFD166; }
 .mobile-nav .auth-actions{ margin-top:10px; padding-top:14px; border-top:1px solid rgba(255,209,102,0.3); }
 
-/* Keep the hamburger menu visible for larger accessibility text sizes so
-   the mobile menu pattern remains consistent across all text scales. */
+/* Keep the navigation layout stable while accessibility text sizing grows */
 .main-nav{ transition: max-height .32s ease, opacity .28s ease, transform .28s ease, padding .28s ease; }
-html.text-size-large .main-nav,
-html.text-size-xlarge .main-nav{
-  display:none !important; max-height:0 !important; opacity:0 !important;
-  transform:none !important; overflow:hidden !important; pointer-events:none !important;
-}
-html.text-size-large .menu-toggle,
-html.text-size-xlarge .menu-toggle{
-  display:flex !important; opacity:1 !important; pointer-events:auto !important;
-}
 html.text-size-large .site-header .container,
 html.text-size-xlarge .site-header .container{
   gap:12px;
@@ -882,3 +986,4 @@ html.text-size-xlarge .site-header .container{
 .main-nav::-webkit-scrollbar-thumb{ background:rgba(34,31,26,0.12); border-radius:999px; }
 .main-nav{ scroll-snap-type:x proximity; }
 .main-nav a{ scroll-snap-align:center; }
+ 

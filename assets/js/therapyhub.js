@@ -1,154 +1,207 @@
 /* ==========================================================================
-   AbleSpace — Therapy Hub interactivity
-   Renders a sidebar of filterable "problems" (ADLs, IADLs, conditions) from
-   TH_ITEMS (assets/js/therapyhub-data.js) and, on selection, renders a full
-   Solution panel (interventions, exercises, equipment, home mods, activities,
-   outcomes, difficulty/age/time) plus a Safety Tips panel.
+   AbleSpace — Therapy Hub practical guides
+  The page uses the shared TH_ITEMS catalog to render a searchable,
+  category-filtered list of practical OT guides. Each card opens a modal with
+  the guide content and an Ask Musa link.
    ========================================================================== */
 
 (function () {
   "use strict";
-  if (!window.TH_ITEMS) return;
 
-  const groupsEl = document.getElementById("th-filter-groups");
-  const contentEl = document.getElementById("th-content");
+  const guideListEl = document.getElementById("therapy-guide-list");
   const searchInput = document.getElementById("th-search-input");
-  if (!groupsEl || !contentEl) return;
+  const categoryButtons = document.querySelectorAll("[data-therapy-category]");
+  const viewAllButtons = document.querySelectorAll("[data-therapy-view-all]");
+  const resourceHeading = document.getElementById("resource-section-heading");
 
-  const GROUP_ORDER = [
-    "Activities of Daily Living",
-    "Instrumental Activities of Daily Living",
-    "Physical Conditions",
-    "Neurological Conditions",
-    "Developmental Conditions",
-    "Mental Health",
-    "Age-Related",
-    "Contexts",
-    "Skills"
-  ];
+  if (!guideListEl) return;
 
-  function groupItems() {
-    const byGroup = {};
-    window.TH_ITEMS.forEach(function (item) {
-      if (!byGroup[item.group]) byGroup[item.group] = [];
-      byGroup[item.group].push(item);
-    });
-    return byGroup;
+  const categoryMap = {
+    "adl-dress-upper": ["adl-dress-upper", "adl-dress-lower", "adl-grooming", "adl-toileting", "adl-feeding", "adl-bathing", "adl-eating", "adl-oral", "adl-teeth"],
+    "adl-mobility": ["adl-mobility", "adl-transfers", "adl-handwashing", "adl-haircare", "adl-nailcare", "adl-toileting"],
+    "skill-finemotor": ["cond-arthritis", "cond-handinjury", "iadl-computer", "iadl-phone", "adl-grooming", "adl-nailcare"],
+    "skill-memory": ["iadl-medication", "iadl-money", "iadl-computer", "iadl-phone", "iadl-community", "iadl-transport"],
+    "energy-rest": ["iadl-mealprep", "iadl-laundry", "iadl-cleaning", "iadl-petcare", "cond-parkinsons", "cond-arthritis"],
+    "home-safety": ["adl-bathing", "adl-toileting", "iadl-cooking", "iadl-cleaning", "cond-stroke", "cond-parkinsons"],
+    "equipment-aids": ["adl-dress-upper", "adl-transfers", "cond-arthritis", "cond-handinjury", "iadl-computer", "iadl-phone"],
+    "school-work": ["iadl-computer", "iadl-community", "iadl-money", "iadl-transport", "iadl-shopping", "iadl-driving"],
+    "social-participation": ["iadl-community", "iadl-shopping", "iadl-transport", "iadl-driving", "iadl-phone", "iadl-transport"]
+  };
+
+  const state = { activeCategory: null, query: "" };
+
+  function escapeHtml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\"/g, "&quot;")
+      .replace(/'/g, "&#039;");
   }
 
-  function buildSidebar() {
-    const byGroup = groupItems();
-    let html = "";
-    GROUP_ORDER.forEach(function (groupName) {
-      const items = byGroup[groupName];
-      if (!items) return;
-      const collapsedByDefault = ["Physical Conditions", "Neurological Conditions", "Developmental Conditions", "Mental Health", "Age-Related", "Contexts", "Skills"].indexOf(groupName) !== -1;
-      html += '<div class="th-group' + (collapsedByDefault ? " collapsed" : "") + '" data-group="' + groupName + '">' +
-        '<button type="button" class="th-group__title" data-toggle-group>' +
-        '<span>' + groupName + ' (' + items.length + ')</span>' +
-        '<i class="fa-solid fa-chevron-down chev"></i>' +
-        '</button>' +
-        '<div class="th-group__list">' +
-        items.map(function (item) {
-          return '<button type="button" class="th-item-btn" data-item="' + item.id + '" data-search="' + item.name.toLowerCase() + '">' +
-            '<i class="fa-solid ' + item.icon + '"></i><span>' + item.name + '</span></button>';
-        }).join("") +
-        '</div></div>';
-    });
-    groupsEl.innerHTML = html;
+  // Prefer detailed guide data when available
+  function sourceItems() {
+    if (window.TH_GUIDES && Array.isArray(window.TH_GUIDES) && window.TH_GUIDES.length) return window.TH_GUIDES.slice();
+    if (window.TH_ITEMS && Array.isArray(window.TH_ITEMS)) return window.TH_ITEMS.slice();
+    return [];
   }
 
-  function renderSolution(item) {
-    const listHtml = function (arr) {
-      if (!arr || !arr.length) return '<li style="color:var(--ink-300);">Not applicable for this item.</li>';
-      return arr.map(function (t) { return '<li><i class="fa-solid fa-circle-check"></i>' + t + '</li>'; }).join("");
-    };
+  function getFilteredItems() {
+    let items = sourceItems();
 
-    contentEl.innerHTML =
-      '<div class="solution-card">' +
-        '<div class="solution-card__head">' +
-          '<span class="tag"><i class="fa-solid ' + item.icon + '"></i> ' + item.group + '</span>' +
-          '<h2>' + item.name + '</h2>' +
-          '<p>' + item.blurb + '</p>' +
-          '<div class="solution-meta">' +
-            '<span class="meta-chip"><i class="fa-solid fa-gauge"></i> ' + item.difficulty + '</span>' +
-            '<span class="meta-chip"><i class="fa-solid fa-user-group"></i> ' + item.ageGroup + '</span>' +
-            '<span class="meta-chip"><i class="fa-regular fa-clock"></i> ' + item.time + '</span>' +
-          '</div>' +
-        '</div>' +
-        '<div class="solution-card__body">' +
-          '<div class="solution-grid">' +
-            '<div class="solution-block"><h4><i class="fa-solid fa-stethoscope"></i> Recommended interventions</h4><ul class="solution-list">' + listHtml(item.interventions) + '</ul></div>' +
-            '<div class="solution-block"><h4><i class="fa-solid fa-dumbbell"></i> Exercises</h4><ul class="solution-list">' + listHtml(item.exercises) + '</ul></div>' +
-            '<div class="solution-block"><h4><i class="fa-solid fa-toolbox"></i> Adaptive equipment</h4><ul class="solution-list">' + listHtml(item.equipment) + '</ul></div>' +
-            '<div class="solution-block"><h4><i class="fa-solid fa-house-chimney"></i> Home modifications</h4><ul class="solution-list">' + listHtml(item.homeMods) + '</ul></div>' +
-          '</div>' +
-          '<div class="solution-block"><h4><i class="fa-solid fa-puzzle-piece"></i> Recommended therapy activities</h4><ul class="solution-list">' + listHtml(item.activities) + '</ul></div>' +
-          '<div class="outcomes-box"><i class="fa-solid fa-chart-line"></i><p>' + item.outcomes + '</p></div>' +
-          '<div class="safety-box">' +
-            '<h4><i class="fa-solid fa-triangle-exclamation"></i> Safety tips</h4>' +
-            '<ul>' + item.safetyTips.map(function (t) { return '<li><i class="fa-solid fa-shield-heart"></i>' + t + '</li>'; }).join("") + '</ul>' +
-          '</div>' +
-        '</div>' +
-        '<div class="solution-card__foot">' +
-          '<a href="ask-musa.html?q=' + encodeURIComponent(item.name) + '" class="btn btn-primary"><i class="fa-solid fa-sparkles"></i> Ask Musa about ' + item.name + '</a>' +
-          '<a href="find-a-therapist.html" class="btn btn-outline"><i class="fa-solid fa-user-doctor"></i> Find a Therapist</a>' +
-        '</div>' +
-      '</div>';
-
-    contentEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }
-
-  function selectItem(id) {
-    const item = window.TH_ITEMS.find(function (x) { return x.id === id; });
-    if (!item) return;
-    document.querySelectorAll(".th-item-btn").forEach(function (b) { b.classList.toggle("active", b.dataset.item === id); });
-    // Auto-expand the group containing the selected item
-    const btn = groupsEl.querySelector('[data-item="' + id + '"]');
-    if (btn) {
-      const groupWrap = btn.closest(".th-group");
-      if (groupWrap) groupWrap.classList.remove("collapsed");
+    if (state.activeCategory && categoryMap[state.activeCategory]) {
+      const activeIds = new Set(categoryMap[state.activeCategory]);
+      items = items.filter(function (item) {
+        return activeIds.has(item.id);
+      });
     }
-    renderSolution(item);
+
+    if (state.query) {
+      const query = state.query.toLowerCase();
+      items = items.filter(function (item) {
+        const searchableText = [item.name, item.blurb, item.group, item.cat, (item.activities || []).join(" "), (item.interventions || []).join(" "), (item.equipment || []).join(" ")].join(" ").toLowerCase();
+        return searchableText.indexOf(query) !== -1;
+      });
+    }
+
+    return items;
   }
 
-  buildSidebar();
-
-  groupsEl.addEventListener("click", function (e) {
-    const toggle = e.target.closest("[data-toggle-group]");
-    if (toggle) {
-      toggle.closest(".th-group").classList.toggle("collapsed");
+  function renderGuideList(items) {
+    if (!items.length) {
+      guideListEl.innerHTML = '<div class="therapy-hub-page__empty-state"><h3>No practical guides match this search.</h3><p>Try another term such as dressing, fatigue, mobility, balance, writing, or safety.</p></div>';
       return;
     }
-    const itemBtn = e.target.closest("[data-item]");
-    if (itemBtn) selectItem(itemBtn.dataset.item);
-  });
 
-  contentEl.addEventListener("click", function (e) {
-    const guide = e.target.closest("[data-open]");
-    if (guide) selectItem(guide.dataset.open);
-  });
+    guideListEl.innerHTML = items.map(function (item) {
+      const tagText = item.category || item.group || "Practical Guide";
+      const art = item.image ? ('<div class="therapy-hub-page__resource-art"><img src="' + item.image + '" alt="' + escapeHtml(item.alt || item.name) + '"></div>') : ('<div class="therapy-hub-page__resource-art" aria-hidden="true"><i class="fa-solid ' + (item.icon || "fa-circle-question") + '"></i></div>');
+      return '<article class="therapy-hub-page__resource-card">' +
+        art +
+        '<div class="therapy-hub-page__resource-body">' +
+          '<span class="therapy-hub-page__resource-tag">' + escapeHtml(tagText) + '</span>' +
+          '<h3>' + escapeHtml(item.name) + '</h3>' +
+          '<p>' + escapeHtml(item.blurb) + '</p>' +
+          '<div class="therapy-hub-page__meta"><span><i class="fa-regular fa-clock"></i> ' + escapeHtml(item.time || '') + '</span><span><i class="fa-solid fa-level-up"></i> ' + escapeHtml(item.difficulty || '') + '</span></div>' +
+          '<div class="therapy-hub-page__card-actions">' +
+            '<button type="button" class="btn btn-primary btn-sm" data-view-guide="' + item.id + '">View Guide</button>' +
+            '<a href="ask-musa.html?q=' + encodeURIComponent(item.name) + '" class="btn btn-outline btn-sm">Ask Musa</a>' +
+          '</div>' +
+        '</div>' +
+      '</article>';
+    }).join("");
 
-  if (searchInput) {
-    searchInput.addEventListener("input", function () {
-      const q = searchInput.value.trim().toLowerCase();
-      document.querySelectorAll(".th-group").forEach(function (group) {
-        let anyVisible = false;
-        group.querySelectorAll(".th-item-btn").forEach(function (btn) {
-          const match = !q || btn.dataset.search.indexOf(q) !== -1;
-          btn.hidden = !match;
-          if (match) anyVisible = true;
-        });
-        group.style.display = anyVisible ? "" : "none";
-        if (q && anyVisible) group.classList.remove("collapsed");
+    guideListEl.querySelectorAll("[data-view-guide]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        const chosen = sourceItems().find(function (item) { return item.id === button.dataset.viewGuide; });
+        if (chosen) openGuide(chosen);
       });
     });
   }
 
-  // Deep-link support: therapy-hub.html?item=adl-bathing
-  const params = new URLSearchParams(location.search);
-  const preselect = params.get("item");
-  if (preselect && window.TH_ITEMS.some(function (x) { return x.id === preselect; })) {
-    selectItem(preselect);
+  function updateCategoryButtons() {
+    categoryButtons.forEach(function (button) {
+      const isActive = state.activeCategory === button.dataset.therapyCategory;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
   }
+
+  function refreshGuides() {
+    renderGuideList(getFilteredItems());
+    updateCategoryButtons();
+  }
+
+  function ensureModal() {
+    let modal = document.getElementById("therapy-guide-modal");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "therapy-guide-modal";
+      modal.className = "therapy-guide-modal";
+      modal.setAttribute("aria-hidden", "true");
+      modal.innerHTML = '<div class="therapy-guide-modal__backdrop" data-close-guide></div><div class="therapy-guide-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="therapy-guide-title"><button type="button" class="therapy-guide-modal__close" aria-label="Close guide"><i class="fa-solid fa-xmark"></i></button><div class="therapy-guide-modal__content"></div></div>';
+      document.body.appendChild(modal);
+      modal.addEventListener("click", function (event) {
+        if (event.target && event.target.matches("[data-close-guide]")) closeGuide();
+      });
+      const closeButton = modal.querySelector(".therapy-guide-modal__close");
+      if (closeButton) closeButton.addEventListener("click", closeGuide);
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && modal.classList.contains("open")) closeGuide();
+      });
+    }
+    return modal;
+  }
+
+  function closeGuide() {
+    const modal = document.getElementById("therapy-guide-modal");
+    if (!modal) return;
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+  }
+
+  function openGuide(item) {
+    const modal = ensureModal();
+    const content = modal.querySelector(".therapy-guide-modal__content");
+    // Prefer a richer guide object from TH_GUIDES if available
+    const rich = (window.TH_GUIDES || []).find(function (g) { return g.id === item.id; });
+    const guide = rich || item;
+
+    function listHtml(arr) { if (!arr || !arr.length) return '<p>Not specified.</p>'; return '<ul>' + arr.map(function (t) { return '<li>' + escapeHtml(t) + '</li>'; }).join('') + '</ul>'; }
+    function stepsHtml(arr) { if (!arr || !arr.length) return '<p>Not specified.</p>'; return '<ol>' + arr.map(function (s) { return '<li>' + escapeHtml(s) + '</li>'; }).join('') + '</ol>'; }
+
+    content.innerHTML = '<div class="therapy-guide-modal__eyebrow">' + escapeHtml(guide.category || guide.group || 'Practical Guide') + '</div>' +
+      '<h3 id="therapy-guide-title">' + escapeHtml(guide.name) + '</h3>' +
+      '<p>' + escapeHtml(guide.overview || guide.blurb || '') + '</p>' +
+      '<div class="therapy-guide-modal__meta"><span><i class="fa-regular fa-clock"></i> ' + escapeHtml(guide.time || '') + '</span><span><i class="fa-solid fa-level-up"></i> ' + escapeHtml(guide.difficulty || '') + '</span></div>' +
+      '<div class="therapy-guide-modal__section"><h4>What you may need</h4>' + listHtml(guide.equipment || guide.equipmentThatMayHelp || []) + '</div>' +
+      '<div class="therapy-guide-modal__section"><h4>Step-by-step guide</h4>' + stepsHtml(guide.steps || guide.interventions || []) + '</div>' +
+      '<div class="therapy-guide-modal__section"><h4>Safety precautions</h4>' + listHtml(guide.safety || guide.safetyTips || []) + '</div>' +
+      '<div class="therapy-guide-modal__section"><h4>Equipment that may help</h4>' + listHtml(guide.equipmentThatMayHelp || guide.equipment || []) + '</div>' +
+      '<div class="therapy-guide-modal__section"><h4>When to seek professional support</h4><p>' + escapeHtml(guide.whenToSeek || 'If you are unsure whether these approaches are right for you or if the task is unsafe, consider consulting a qualified Occupational Therapist for an individualized assessment.') + '</p></div>' +
+      '<div class="therapy-guide-modal__section"><h4>Still have questions?</h4><p><a href="ask-musa.html?q=' + encodeURIComponent(guide.name) + '" class="btn btn-primary btn-sm">Ask Musa</a> <a href="find-a-therapist.html" class="btn btn-outline btn-sm">Find a Therapist</a></p></div>' +
+      '<div class="therapy-guide-modal__section"><p style="color:var(--ink-500); font-size:0.9rem; margin-top:12px;">This guide provides general educational information and is not a substitute for individualized assessment or treatment from a qualified Occupational Therapist or other healthcare professional.</p></div>' +
+      '<div class="therapy-guide-modal__actions"><button type="button" class="btn btn-outline btn-sm" data-close-guide>Close</button></div>';
+
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+    const closeTrigger = modal.querySelector("[data-close-guide]");
+    if (closeTrigger) closeTrigger.addEventListener("click", closeGuide);
+  }
+
+  categoryButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      const selected = button.dataset.therapyCategory;
+      state.activeCategory = selected === state.activeCategory ? null : selected;
+      state.query = "";
+      if (searchInput) searchInput.value = "";
+      refreshGuides();
+      if (resourceHeading) {
+        resourceHeading.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+
+  viewAllButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      state.activeCategory = null;
+      state.query = "";
+      if (searchInput) searchInput.value = "";
+      refreshGuides();
+      if (resourceHeading) {
+        resourceHeading.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+
+  if (searchInput) {
+    searchInput.addEventListener("input", function () {
+      state.query = searchInput.value.trim();
+      refreshGuides();
+    });
+  }
+
+  refreshGuides();
 })();
