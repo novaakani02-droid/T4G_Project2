@@ -1,252 +1,579 @@
-/* AbleSpace — Daily Planner (schedule, goals, mood & energy) */
+/* AbleSpace — Daily Planner (scoped, date-keyed storage, OT-focused) */
 
-const STORE_KEY = 'ablespace_planner_v1';
+(function () {
+  document.addEventListener('DOMContentLoaded', () => {
+    const page = document.querySelector('[data-page="daily-planner"]');
+    if (!page) return;
 
-function loadStore() {
-  try {
-    const raw = JSON.parse(localStorage.getItem(STORE_KEY));
-    if (raw) return raw;
-  } catch (e) { /* fall through */ }
-  return {
-    tasks: [
-      { id: 't1', title: 'Morning stretch & dressing routine', timeSlot: 'Morning', category: 'ADL Routine', completed: true },
-      { id: 't2', title: 'Take morning medication', timeSlot: 'Morning', category: 'Medication', completed: true },
-      { id: 't3', title: 'Hand-strengthening putty exercises', timeSlot: 'Afternoon', category: 'Therapy Exercise', completed: false },
-      { id: 't4', title: 'Prepare lunch using rocker knife', timeSlot: 'Afternoon', category: 'Meals', completed: false },
-      { id: 't5', title: 'Rest period — 20 minutes', timeSlot: 'Evening', category: 'Rest Period', completed: false }
-    ],
-    goals: [
-      { id: 'g1', title: 'Dress independently every morning', target: 7, progress: 4, category: 'ADLs', description: 'Complete the full morning dressing routine without assistance.' },
-      { id: 'g2', title: 'Complete hand exercises daily', target: 7, progress: 5, category: 'Fine motor', description: '5 minutes of therapy putty work, twice a day.' },
-      { id: 'g3', title: 'Walk safely for 10 minutes', target: 5, progress: 2, category: 'Mobility', description: 'Short supported walk to build stamina and balance confidence.' }
-    ],
-    moodLogs: []
-  };
-}
+    function todayKey() {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const dd = String(now.getDate()).padStart(2, '0');
+      return `dailyPlanner_${yyyy}-${mm}-${dd}`;
+    }
 
-function saveStore(store) { localStorage.setItem(STORE_KEY, JSON.stringify(store)); }
+    function loadStore() {
+      const key = todayKey();
+      try {
+        const raw = JSON.parse(localStorage.getItem(key));
+        if (raw && typeof raw === 'object') {
+          return {
+            activities: Array.isArray(raw.activities) ? raw.activities : Array.isArray(raw.tasks) ? raw.tasks : [],
+            goals: Array.isArray(raw.goals) ? raw.goals : [],
+            checkin: raw.checkin || { mood: '', energy: '' },
+            moodLogs: Array.isArray(raw.moodLogs) ? raw.moodLogs : []
+          };
+        }
+      } catch (error) {
+        // Ignore invalid localStorage and continue with empty planner.
+      }
+      return { activities: [], goals: [], checkin: { mood: '', energy: '' }, moodLogs: [] };
+    }
 
-let store = loadStore();
+    function saveStore() {
+      localStorage.setItem(todayKey(), JSON.stringify(store));
+    }
 
-/* ---------- Tabs ---------- */
-document.querySelectorAll('.planner-tab').forEach((tab) => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.planner-tab').forEach((t) => t.classList.remove('active'));
-    document.querySelectorAll('.planner-panel').forEach((p) => p.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById(tab.dataset.panel).classList.add('active');
-  });
-});
+    let store = loadStore();
 
-/* ---------- Stats ---------- */
-function renderStats() {
-  const total = store.tasks.length;
-  const done = store.tasks.filter((t) => t.completed).length;
-  const goalAvg = store.goals.length
-    ? Math.round(store.goals.reduce((s, g) => s + (g.progress / g.target), 0) / store.goals.length * 100)
-    : 0;
-  const lastMood = store.moodLogs[store.moodLogs.length - 1];
+    function uid(prefix) {
+      return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
+    }
 
-  document.getElementById('stat-tasks').textContent = `${done}/${total}`;
-  document.getElementById('stat-goals').textContent = `${goalAvg}%`;
-  document.getElementById('stat-mood').textContent = lastMood ? lastMood.mood : '—';
-  document.getElementById('stat-checkins').textContent = store.moodLogs.length;
-}
+    function escapeHtml(value) {
+      return String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
 
-/* ---------- Schedule / Tasks ---------- */
-const SLOTS = ['Morning', 'Afternoon', 'Evening', 'Night'];
-const SLOT_ICONS = { Morning: 'fa-sun', Afternoon: 'fa-cloud-sun', Evening: 'fa-cloud-moon', Night: 'fa-moon' };
+    function formatDateShort() {
+      const now = new Date();
+      return now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+    }
 
-function renderSchedule() {
-  const container = document.getElementById('schedule-list');
-  if (!container) return;
+    const todayEl = document.getElementById('today-date-short');
+    if (todayEl) {
+      todayEl.textContent = formatDateShort();
+    }
 
-  if (store.tasks.length === 0) {
-    container.innerHTML = `<div class="empty-state"><i class="fa-regular fa-calendar" style="font-size:1.6rem; margin-bottom:8px; display:block;"></i>No tasks yet — add your first one above.</div>`;
-    renderStats();
-    return;
-  }
+    function getActivityProgress() {
+      const total = store.activities.length;
+      const done = store.activities.filter((activity) => activity.completed).length;
+      const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+      return { total, done, percent };
+    }
 
-  container.innerHTML = SLOTS.map((slot) => {
-    const tasks = store.tasks.filter((t) => t.timeSlot === slot);
-    if (tasks.length === 0) return '';
-    return `
-      <div class="timeslot-group">
-        <h4><i class="fa-solid ${SLOT_ICONS[slot]}"></i> ${slot}</h4>
-        ${tasks.map((t) => `
-          <div class="task-row ${t.completed ? 'completed' : ''}">
-            <button type="button" class="task-check ${t.completed ? 'checked' : ''}" data-toggle="${t.id}" aria-label="Mark ${t.title} complete">
-              ${t.completed ? '<i class="fa-solid fa-check"></i>' : ''}
-            </button>
-            <div class="task-row__body">
-              <div class="task-row__title">${t.title}</div>
-              <div class="task-row__cat">${t.category}</div>
-            </div>
-            <button type="button" class="task-row__del" data-delete="${t.id}" aria-label="Delete task"><i class="fa-solid fa-trash"></i></button>
+    function updateOverview() {
+      const progress = getActivityProgress();
+      const goalTotal = 3;
+      const goalDone = store.goals.filter((goal) => goal.done).length;
+
+      const overviewActivities = document.getElementById('overview-activities');
+      const overviewProgress = document.getElementById('overview-progress');
+      const overviewGoals = document.getElementById('overview-goals');
+      const progressBar = document.getElementById('progress-bar');
+      const glanceActivities = document.getElementById('glance-activities');
+      const glanceGoals = document.getElementById('glance-goals');
+      const goalsSummary = document.getElementById('goals-summary');
+
+      if (overviewActivities) {
+        overviewActivities.textContent = `${progress.done} / ${progress.total}`;
+      }
+      if (overviewProgress) {
+        overviewProgress.textContent = `${progress.percent}%`;
+      }
+      if (overviewGoals) {
+        overviewGoals.textContent = `${goalDone} / ${goalTotal}`;
+      }
+      if (progressBar) {
+        progressBar.style.width = `${progress.percent}%`;
+      }
+      if (glanceActivities) {
+        glanceActivities.textContent = `${progress.done} / ${progress.total}`;
+      }
+      if (glanceGoals) {
+        glanceGoals.textContent = `${goalDone} / ${goalTotal}`;
+      }
+      if (goalsSummary) {
+        goalsSummary.textContent = `${goalDone} / ${goalTotal} Goals Completed`;
+      }
+    }
+
+    function formatTimeDisplay(timeValue) {
+      if (!timeValue) return 'Flexible';
+      const [hours, minutes] = timeValue.split(':').map(Number);
+      const date = new Date();
+      date.setHours(hours, minutes, 0, 0);
+      return new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit' }).format(date);
+    }
+
+    function getTimeSortValue(timeValue) {
+      if (!timeValue) return Number.MAX_SAFE_INTEGER;
+      const [hours, minutes] = timeValue.split(':').map(Number);
+      return hours * 60 + minutes;
+    }
+
+    function renderSchedule() {
+      const container = document.getElementById('schedule-list');
+      if (!container) return;
+
+      if (!store.activities.length) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state__icon" aria-hidden="true">🌿</div>
+            <h3>Your day starts here 🌿</h3>
+            <p>Add your first activity and build a routine that works for you.</p>
+            <button type="button" class="btn btn-primary" data-open-empty-add>+ Add Activity</button>
           </div>
-        `).join('')}
-      </div>
-    `;
-  }).join('');
+        `;
+        const addEmptyBtn = container.querySelector('[data-open-empty-add]');
+        if (addEmptyBtn) {
+          addEmptyBtn.addEventListener('click', () => openAddModal());
+        }
+        updateOverview();
+        renderSummary();
+        return;
+      }
 
-  container.querySelectorAll('[data-toggle]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const task = store.tasks.find((t) => t.id === btn.dataset.toggle);
-      task.completed = !task.completed;
-      saveStore(store);
-      renderSchedule();
-    });
-  });
-  container.querySelectorAll('[data-delete]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      store.tasks = store.tasks.filter((t) => t.id !== btn.dataset.delete);
-      saveStore(store);
-      renderSchedule();
-    });
-  });
-  renderStats();
-}
+      const sorted = [...store.activities].sort((a, b) => getTimeSortValue(a.time) - getTimeSortValue(b.time));
+      const chunks = [];
+      sorted.forEach((activity) => {
+        const timeLabel = formatTimeDisplay(activity.time);
+        let target = chunks.find((chunk) => chunk.label === timeLabel);
+        if (!target) {
+          target = { label: timeLabel, items: [] };
+          chunks.push(target);
+        }
+        target.items.push(activity);
+      });
 
-const addTaskForm = document.getElementById('add-task-form');
-if (addTaskForm) {
-  addTaskForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const title = document.getElementById('new-task-title');
-    const slot = document.getElementById('new-task-slot');
-    const cat = document.getElementById('new-task-cat');
-    if (!title.value.trim()) return;
-    store.tasks.push({
-      id: 't' + Date.now(),
-      title: title.value.trim(),
-      timeSlot: slot.value,
-      category: cat.value,
-      completed: false
+      container.innerHTML = chunks.map((group) => `
+        <div class="timeline-group">
+          <div class="timeline-time">${escapeHtml(group.label)}</div>
+          ${group.items.map((activity) => `
+            <article class="timeline-card ${activity.completed ? 'is-complete' : ''}" data-id="${activity.id}">
+              <button type="button" class="activity-check ${activity.completed ? 'is-checked' : ''}" data-toggle="${activity.id}" aria-label="${activity.completed ? 'Mark incomplete' : 'Mark complete'}: ${escapeHtml(activity.title)}">
+                <i class="fa-solid fa-check"></i>
+              </button>
+              <div class="activity-content">
+                <div class="activity-content__header">
+                  <h4 class="activity-title">${escapeHtml(activity.title)}</h4>
+                  <div class="activity-pill">${escapeHtml(activity.priority || 'Medium')} priority</div>
+                </div>
+                <div class="activity-card__meta">
+                  <span>${escapeHtml(activity.category)}</span>
+                  <span>·</span>
+                  <span>${escapeHtml(activity.duration || '30 minutes')}</span>
+                  <span>·</span>
+                  <span>Energy ${escapeHtml(activity.energy || 'Medium')}</span>
+                </div>
+                ${activity.notes ? `<div class="activity-notes">${escapeHtml(activity.notes)}</div>` : ''}
+                <div class="activity-card__details">
+                  <span class="activity-pill"><i class="fa-solid fa-clock"></i> ${escapeHtml(activity.time || 'Flexible')}</span>
+                  <span class="activity-pill"><i class="fa-solid fa-bolt"></i> ${escapeHtml(activity.energy || 'Medium')}</span>
+                </div>
+                <div class="activity-actions">
+                  <button type="button" class="btn btn-outline" data-edit="${activity.id}">Edit</button>
+                  <button type="button" class="btn btn-outline" data-delete="${activity.id}">Delete</button>
+                </div>
+              </div>
+            </article>
+          `).join('')}
+        </div>
+      `).join('');
+
+      container.querySelectorAll('[data-toggle]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const id = button.dataset.toggle;
+          const activity = store.activities.find((item) => item.id === id);
+          if (!activity) return;
+          activity.completed = !activity.completed;
+          saveStore();
+          renderSchedule();
+          updateOverview();
+        });
+      });
+
+      container.querySelectorAll('[data-delete]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const id = button.dataset.delete;
+          const activity = store.activities.find((item) => item.id === id);
+          if (!activity) return;
+          const confirmed = window.confirm(`Delete this activity?\n\n${activity.title}`);
+          if (!confirmed) return;
+          store.activities = store.activities.filter((item) => item.id !== id);
+          saveStore();
+          renderSchedule();
+          updateOverview();
+        });
+      });
+
+      container.querySelectorAll('[data-edit]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const id = button.dataset.edit;
+          openEditModal(id);
+        });
+      });
+
+      renderSummary();
+      updateOverview();
+    }
+
+    function renderGoals() {
+      const list = document.getElementById('goals-list');
+      if (!list) return;
+
+      if (!store.goals.length) {
+        list.innerHTML = '<div class="goal-empty">No goals added yet.</div>';
+        updateOverview();
+        return;
+      }
+
+      list.innerHTML = store.goals.map((goal) => `
+        <label class="goal-item ${goal.done ? 'is-complete' : ''}">
+          <input type="checkbox" data-goal-toggle="${goal.id}" ${goal.done ? 'checked' : ''}>
+          <span class="goal-text">${escapeHtml(goal.title)}</span>
+        </label>
+      `).join('');
+
+      list.querySelectorAll('[data-goal-toggle]').forEach((checkbox) => {
+        checkbox.addEventListener('change', () => {
+          const id = checkbox.dataset.goalToggle;
+          const goal = store.goals.find((item) => item.id === id);
+          if (!goal) return;
+          goal.done = checkbox.checked;
+          saveStore();
+          renderGoals();
+          updateOverview();
+        });
+      });
+
+      updateOverview();
+    }
+
+    function renderCheckIn() {
+      const result = document.getElementById('checkin-result');
+      if (!result) return;
+
+      if (!store.checkin || (!store.checkin.mood && !store.checkin.energy)) {
+        result.innerHTML = '<div class="checkin-empty">No check-ins yet.</div>';
+        updateGlance();
+        return;
+      }
+
+      const moodMap = { Good: '😊', Okay: '😐', Low: '😔', Struggling: '😣' };
+      const moodLabel = store.checkin.mood || '—';
+      const energyLabel = store.checkin.energy || '—';
+      result.innerHTML = `
+        <div class="checkin-card">
+          <h4>Today's Check-in</h4>
+          <p><strong>Mood:</strong> ${moodMap[moodLabel] || '🙂'} ${escapeHtml(moodLabel)}</p>
+          <p><strong>Energy:</strong> ${escapeHtml(energyLabel)}</p>
+          <p class="checkin-note">You can adjust your plan based on how you're feeling today.</p>
+        </div>
+      `;
+      updateGlance();
+    }
+
+    function updateGlance() {
+      const moodText = document.getElementById('glance-mood');
+      const energyText = document.getElementById('glance-energy');
+      const messageEl = document.getElementById('glance-message');
+      const progress = getActivityProgress();
+      const goalsDone = store.goals.filter((goal) => goal.done).length;
+
+      if (moodText) {
+        moodText.textContent = store.checkin && store.checkin.mood ? store.checkin.mood : '—';
+      }
+      if (energyText) {
+        energyText.textContent = store.checkin && store.checkin.energy ? store.checkin.energy : '—';
+      }
+      if (messageEl) {
+        if (progress.total === 0) {
+          messageEl.textContent = 'Start by adding the activities that matter most for today.';
+        } else if (progress.percent >= 80) {
+          messageEl.textContent = 'You made strong progress today. Keep going with what supports your routine.';
+        } else if (progress.percent >= 40) {
+          messageEl.textContent = 'You made progress today. Every completed activity counts.';
+        } else if (goalsDone >= 1) {
+          messageEl.textContent = 'You are building momentum. Focus on one meaningful step at a time.';
+        } else {
+          messageEl.textContent = "It's okay if everything didn't get done. You can adjust your plan and try again tomorrow.";
+        }
+      }
+    }
+
+    function renderSummary() {
+      const progress = getActivityProgress();
+      const goalsDone = store.goals.filter((goal) => goal.done).length;
+      const goalsTotal = store.goals.length;
+      const messageEl = document.getElementById('glance-message');
+
+      if (!messageEl) return;
+      if (progress.total === 0) {
+        messageEl.textContent = 'Start by adding the activities that matter most for today.';
+      } else if (progress.percent >= 80) {
+        messageEl.textContent = 'You made strong progress today. Keep going with what supports your routine.';
+      } else if (progress.percent >= 40) {
+        messageEl.textContent = 'You made progress today. Every completed activity counts.';
+      } else if (goalsDone >= 1) {
+        messageEl.textContent = 'You are building momentum. Focus on one meaningful step at a time.';
+      } else {
+        messageEl.textContent = "It's okay if everything didn't get done. You can adjust your plan and try again tomorrow.";
+      }
+    }
+
+    function openAddModal(prefill = {}) {
+      const modal = document.getElementById('add-activity-modal');
+      if (!modal) return;
+      const form = document.getElementById('add-activity-form');
+      const titleInput = document.getElementById('act-title');
+      const categoryInput = document.getElementById('act-category');
+      const timeInput = document.getElementById('act-time');
+      const durationInput = document.getElementById('act-duration');
+      const priorityInput = document.getElementById('act-priority');
+      const energyInput = document.getElementById('act-energy');
+      const notesInput = document.getElementById('act-notes');
+      const errorEl = document.getElementById('add-activity-error');
+
+      if (form) {
+        form.reset();
+      }
+      if (titleInput) titleInput.value = prefill.title || '';
+      if (categoryInput) categoryInput.value = prefill.category || '';
+      if (timeInput) timeInput.value = prefill.time || '';
+      if (durationInput) durationInput.value = prefill.duration || '30 minutes';
+      if (priorityInput) priorityInput.value = prefill.priority || 'Medium';
+      if (energyInput) energyInput.value = prefill.energy || 'Medium';
+      if (notesInput) notesInput.value = prefill.notes || '';
+      if (errorEl) {
+        errorEl.textContent = '';
+        errorEl.classList.remove('show');
+      }
+      modal.style.display = 'block';
+      modal.setAttribute('aria-hidden', 'false');
+      if (titleInput) titleInput.focus();
+    }
+
+    function closeAddModal() {
+      const modal = document.getElementById('add-activity-modal');
+      if (!modal) return;
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    function openEditModal(id) {
+      const activity = store.activities.find((item) => item.id === id);
+      if (!activity) return;
+      editingId = id;
+      openAddModal({
+        title: activity.title,
+        category: activity.category,
+        time: activity.time,
+        duration: activity.duration,
+        priority: activity.priority,
+        energy: activity.energy,
+        notes: activity.notes
+      });
+    }
+
+    let editingId = null;
+
+    const addActivityForm = document.getElementById('add-activity-form');
+    if (addActivityForm) {
+      addActivityForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const title = document.getElementById('act-title').value.trim();
+        const category = document.getElementById('act-category').value;
+        const time = document.getElementById('act-time').value;
+        const duration = document.getElementById('act-duration').value;
+        const priority = document.getElementById('act-priority').value;
+        const energy = document.getElementById('act-energy').value;
+        const notes = document.getElementById('act-notes').value.trim();
+        const errorEl = document.getElementById('add-activity-error');
+
+        if (!title || !category || !time) {
+          const message = !title ? 'Please enter an activity name.' : !category ? 'Please select a category.' : 'Please choose a time.';
+          if (errorEl) {
+            errorEl.textContent = message;
+            errorEl.classList.add('show');
+          }
+          return;
+        }
+
+        if (errorEl) {
+          errorEl.textContent = '';
+          errorEl.classList.remove('show');
+        }
+
+        if (editingId) {
+          const activity = store.activities.find((item) => item.id === editingId);
+          if (activity) {
+            activity.title = title;
+            activity.category = category;
+            activity.time = time;
+            activity.duration = duration;
+            activity.priority = priority;
+            activity.energy = energy;
+            activity.notes = notes;
+          }
+          editingId = null;
+        } else {
+          store.activities.push({
+            id: uid('activity'),
+            title,
+            category,
+            time,
+            duration,
+            priority,
+            energy,
+            notes,
+            completed: false
+          });
+        }
+
+        saveStore();
+        closeAddModal();
+        renderSchedule();
+      });
+    }
+
+    document.querySelectorAll('[data-close-add]').forEach((button) => {
+      button.addEventListener('click', () => {
+        if (editingId) {
+          editingId = null;
+        }
+        closeAddModal();
+      });
     });
-    saveStore(store);
-    title.value = '';
+
+    const addGoalBtn = document.getElementById('btn-add-goal');
+    const addGoalForm = document.getElementById('add-goal-form');
+    const goalModal = document.getElementById('add-goal-modal');
+    if (addGoalBtn && goalModal) {
+      addGoalBtn.addEventListener('click', () => {
+        if (store.goals.length >= 3) {
+          const errorEl = document.getElementById('add-goal-error');
+          if (errorEl) {
+            errorEl.textContent = "You've reached your 3-goal limit for today. Focus on what matters most.";
+            errorEl.classList.add('show');
+          }
+          return;
+        }
+        const goalInput = document.getElementById('goal-title');
+        const errorEl = document.getElementById('add-goal-error');
+        if (goalInput) goalInput.value = '';
+        if (errorEl) {
+          errorEl.textContent = '';
+          errorEl.classList.remove('show');
+        }
+        goalModal.style.display = 'block';
+        goalModal.setAttribute('aria-hidden', 'false');
+        if (goalInput) goalInput.focus();
+      });
+    }
+
+    document.querySelectorAll('[data-close-goal]').forEach((button) => {
+      button.addEventListener('click', () => {
+        if (goalModal) {
+          goalModal.style.display = 'none';
+          goalModal.setAttribute('aria-hidden', 'true');
+        }
+      });
+    });
+
+    if (addGoalForm) {
+      addGoalForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const title = document.getElementById('goal-title').value.trim();
+        const errorEl = document.getElementById('add-goal-error');
+
+        if (!title) {
+          if (errorEl) {
+            errorEl.textContent = 'Please enter a goal.';
+            errorEl.classList.add('show');
+          }
+          return;
+        }
+
+        if (store.goals.length >= 3) {
+          if (errorEl) {
+            errorEl.textContent = "You've reached your 3-goal limit for today. Focus on what matters most.";
+            errorEl.classList.add('show');
+          }
+          return;
+        }
+
+        store.goals.push({ id: uid('goal'), title, done: false });
+        saveStore();
+        if (goalModal) {
+          goalModal.style.display = 'none';
+          goalModal.setAttribute('aria-hidden', 'true');
+        }
+        renderGoals();
+      });
+    }
+
+    const moodButtons = document.querySelectorAll('.mood-option');
+    const energyButtons = document.querySelectorAll('.energy-option');
+
+    function setSelectedButton(buttonGroup, selectedValue, selectedKey) {
+      buttonGroup.forEach((button) => {
+        const isSelected = button.dataset[selectedKey] === selectedValue;
+        button.classList.toggle('selected', isSelected);
+      });
+    }
+
+    moodButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        setSelectedButton(moodButtons, button.dataset.mood, 'mood');
+      });
+    });
+
+    energyButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        setSelectedButton(energyButtons, button.dataset.energy, 'energy');
+      });
+    });
+
+    const moodForm = document.getElementById('mood-form');
+    if (moodForm) {
+      moodForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const selectedMood = document.querySelector('.mood-option.selected');
+        const selectedEnergy = document.querySelector('.energy-option.selected');
+
+        if (!selectedMood || !selectedEnergy) {
+          alert('Please select both your mood and energy level before logging your check-in.');
+          return;
+        }
+
+        store.checkin = {
+          mood: selectedMood.dataset.mood,
+          energy: selectedEnergy.dataset.energy
+        };
+
+        saveStore();
+        renderCheckIn();
+        setSelectedButton(moodButtons, '', 'mood');
+        setSelectedButton(energyButtons, '', 'energy');
+      });
+    }
+
+    const openAddButton = document.getElementById('btn-open-add');
+    if (openAddButton) {
+      openAddButton.addEventListener('click', () => openAddModal());
+    }
+
+    document.querySelectorAll('.quick-add').forEach((button) => {
+      button.addEventListener('click', () => {
+        openAddModal({ category: button.dataset.category || '' });
+      });
+    });
+
     renderSchedule();
-  });
-}
-
-/* ---------- Goals ---------- */
-function renderGoals() {
-  const container = document.getElementById('goals-list');
-  if (!container) return;
-
-  if (store.goals.length === 0) {
-    container.innerHTML = `<div class="empty-state"><i class="fa-regular fa-flag" style="font-size:1.6rem; margin-bottom:8px; display:block;"></i>No goals yet — set one above.</div>`;
-    return;
-  }
-
-  container.innerHTML = store.goals.map((g) => {
-    const pct = Math.min(100, Math.round((g.progress / g.target) * 100));
-    return `
-      <div class="goal-card">
-        <div class="goal-card__head">
-          <h4>${g.title}</h4>
-          <span class="goal-card__days">${g.progress}/${g.target} days</span>
-        </div>
-        <div class="progress-track"><div class="progress-fill" style="width:${pct}%;"></div></div>
-        <p>${g.description}</p>
-        <div style="display:flex; gap:8px; margin-top:12px;">
-          <button type="button" class="btn btn-outline btn-sm" data-goal-inc="${g.id}"><i class="fa-solid fa-plus"></i> Log a day</button>
-          <button type="button" class="btn btn-outline btn-sm" data-goal-del="${g.id}"><i class="fa-solid fa-trash"></i></button>
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  container.querySelectorAll('[data-goal-inc]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const g = store.goals.find((x) => x.id === btn.dataset.goalInc);
-      if (g.progress < g.target) g.progress += 1;
-      saveStore(store);
-      renderGoals();
-      renderStats();
-    });
-  });
-  container.querySelectorAll('[data-goal-del]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      store.goals = store.goals.filter((x) => x.id !== btn.dataset.goalDel);
-      saveStore(store);
-      renderGoals();
-      renderStats();
-    });
-  });
-}
-
-const addGoalForm = document.getElementById('add-goal-form');
-if (addGoalForm) {
-  addGoalForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const title = document.getElementById('new-goal-title');
-    const target = document.getElementById('new-goal-target');
-    const cat = document.getElementById('new-goal-cat');
-    if (!title.value.trim()) return;
-    store.goals.push({
-      id: 'g' + Date.now(),
-      title: title.value.trim(),
-      target: parseInt(target.value, 10) || 7,
-      progress: 0,
-      category: cat.value,
-      description: `Working toward: ${title.value.trim()}`
-    });
-    saveStore(store);
-    title.value = '';
-    target.value = '';
     renderGoals();
-    renderStats();
+    renderCheckIn();
+    updateGlance();
+    updateOverview();
   });
-}
-
-/* ---------- Mood & energy check-in ---------- */
-let selectedMood = null;
-document.querySelectorAll('.mood-opt').forEach((opt) => {
-  opt.addEventListener('click', () => {
-    document.querySelectorAll('.mood-opt').forEach((o) => o.classList.remove('selected'));
-    opt.classList.add('selected');
-    selectedMood = opt.dataset.mood;
-  });
-});
-
-function renderMoodLog() {
-  const container = document.getElementById('mood-log');
-  if (!container) return;
-  if (store.moodLogs.length === 0) {
-    container.innerHTML = `<div class="empty-state">No check-ins yet today. Log your first one above.</div>`;
-    return;
-  }
-  container.innerHTML = store.moodLogs.slice().reverse().slice(0, 6).map((m) => `
-    <div class="mood-log-entry">
-      <span>${m.date} — ${m.mood}</span>
-      <span>Energy ${m.energy}/5 · Fatigue ${m.fatigue}/5</span>
-    </div>
-  `).join('');
-}
-
-const moodForm = document.getElementById('mood-form');
-if (moodForm) {
-  moodForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (!selectedMood) { alert('Please select a mood first.'); return; }
-    const energy = document.getElementById('energy-slider').value;
-    const fatigue = document.getElementById('fatigue-slider').value;
-    store.moodLogs.push({
-      date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
-      mood: selectedMood,
-      energy,
-      fatigue
-    });
-    saveStore(store);
-    renderMoodLog();
-    renderStats();
-    document.querySelectorAll('.mood-opt').forEach((o) => o.classList.remove('selected'));
-    selectedMood = null;
-  });
-}
-
-/* ---------- Init ---------- */
-renderSchedule();
-renderGoals();
-renderMoodLog();
-renderStats();
+})();

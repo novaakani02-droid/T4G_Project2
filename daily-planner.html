@@ -1,225 +1,440 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Planner — AbleSpace</title>
-<meta name="description" content="Organise your routine, set goals, track tasks, and log mood and energy.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link rel="stylesheet" href="assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Planner — AbleSpace</title>
+  <meta name="description" content="Organise your routine, set goals, track tasks, and log mood and energy.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body data-page="daily-planner">
-<a href="#main" class="skip-link">Skip to main content</a>
+  <a href="#main" class="skip-link">Skip to main content</a>
 
-<div class="util-bar" role="region" aria-label="Accessibility options">
-  <div class="container">
-    <div class="util-bar__label"><i class="fa-solid fa-shield-heart"></i> Built accessibility-first: adjust text size and contrast anytime</div>
-    <div class="util-controls">
-      <div class="util-group" role="group" aria-label="Text size">
-        <span class="gl">Text size</span>
-        <button type="button" data-size="normal" aria-pressed="true">Default</button>
-        <button type="button" data-size="large" aria-pressed="false">Large</button>
-        <button type="button" data-size="xlarge" aria-pressed="false">XL</button>
-      </div>
-      <button type="button" class="contrast-toggle" data-contrast-toggle aria-pressed="false">
-        <i class="fa-solid fa-circle-half-stroke"></i> <span class="contrast-label">High Contrast</span>
-      </button>
-    </div>
-  </div>
-</div>
-
-<header class="site-header">
-  <div class="container">
-    <a href="index.html" class="brand">
-      <span class="brand__mark"><i class="fa-solid fa-hand-holding-heart"></i></span>
-      <span>
-        <span class="brand__name">AbleSpace</span><br>
-        <span class="brand__tag">Supporting everyday independence</span>
-      </span>
-    </a>
-
-    <nav class="main-nav" aria-label="Primary">
-      <a href="index.html" data-nav="home"><i class="fa-solid fa-house"></i> Home</a>
-      <a href="therapy-hub.html" data-nav="therapy-hub"><i class="fa-solid fa-book-open"></i> Therapy Hub</a>
-      <a href="daily-planner.html" data-nav="daily-planner"><i class="fa-solid fa-calendar-days"></i> Daily Planner</a>
-      <a href="find-a-therapist.html" data-nav="find-therapist" class="musa-link"><i class="fa-solid fa-user-doctor"></i> Find a Therapist</a>
-      <a href="contact.html" data-nav="contact"><i class="fa-solid fa-envelope"></i> Contact</a>
-    </nav>
-
-    <div class="auth-actions">
-      <div data-auth-guest style="display:flex; gap:10px;">
-        <a href="login.html" class="btn btn-outline btn-sm"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
-        <a href="signup.html" class="btn btn-teal btn-sm"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
-      </div>
-      <div class="user-pill show" data-auth-user style="display:none">
-        <span class="user-pill__avatar" data-user-initial>G</span>
-        <span class="user-pill__name" data-user-name>Guest</span>
-        <button type="button" data-logout title="Log out"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
-      </div>
-    </div>
-
-    <button class="menu-toggle" data-menu-toggle aria-expanded="false" aria-label="Toggle menu">
-      <i class="fa-solid fa-bars"></i>
-    </button>
-  </div>
-
-  <nav class="mobile-nav" data-mobile-nav aria-label="Mobile">
-    <a href="index.html" data-nav="home">Home</a>
-    <a href="therapy-hub.html" data-nav="therapy-hub">Therapy Hub</a>
-    <a href="daily-planner.html" data-nav="daily-planner">Daily Planner</a>
-    <a href="find-a-therapist.html" data-nav="find-therapist">Find a Therapist</a>
-    <a href="contact.html" data-nav="contact">Contact Us</a>
-    <div class="auth-actions">
-      <div data-auth-guest style="display:flex; gap:10px; width:100%;">
-        <a href="login.html" class="btn btn-outline btn-sm" style="flex:1">Login</a>
-        <a href="signup.html" class="btn btn-teal btn-sm" style="flex:1">Sign Up</a>
-      </div>
-    </div>
-  </nav>
-</header>
-
-<main id="main">
-  <div class="page-hero">
+  <div class="util-bar" role="region" aria-label="Accessibility options">
     <div class="container">
-      <span class="kicker"><i class="fa-solid fa-calendar-days"></i> Routine support</span>
-      <h1>Daily Planner</h1>
-      <p>Organise your schedule, set goals, track tasks, and check in on mood and energy — everything is saved to this browser.</p>
+      <div class="util-bar__label"><i class="fa-solid fa-shield-heart"></i> Built accessibility-first: adjust text size
+        and contrast anytime</div>
+      <div class="util-controls">
+        <div class="util-group" role="group" aria-label="Text size">
+          <span class="gl">Text size</span>
+          <button type="button" data-size="normal" aria-pressed="true">Default</button>
+          <button type="button" data-size="large" aria-pressed="false">Large</button>
+          <button type="button" data-size="xlarge" aria-pressed="false">XL</button>
+        </div>
+        <button type="button" class="contrast-toggle" data-contrast-toggle aria-pressed="false">
+          <i class="fa-solid fa-circle-half-stroke"></i> <span class="contrast-label">High Contrast</span>
+        </button>
+      </div>
     </div>
   </div>
 
-  <div class="section" style="padding-top:40px;">
+  <header class="site-header">
     <div class="container">
+      <a href="index.html" class="brand">
+        <span class="brand__mark"><i class="fa-solid fa-hand-holding-heart"></i></span>
+        <span>
+          <span class="brand__name">AbleSpace</span><br>
+          <span class="brand__tag">Supporting everyday independence</span>
+        </span>
+      </a>
 
-      <div class="stat-strip">
-        <div class="stat-box"><div class="stat-box__num" id="stat-tasks">0/0</div><div class="stat-box__label">Tasks completed today</div></div>
-        <div class="stat-box"><div class="stat-box__num" id="stat-goals">0%</div><div class="stat-box__label">Average goal progress</div></div>
-        <div class="stat-box"><div class="stat-box__num" id="stat-mood">—</div><div class="stat-box__label">Latest mood</div></div>
-        <div class="stat-box"><div class="stat-box__num" id="stat-checkins">0</div><div class="stat-box__label">Check-ins logged</div></div>
-      </div>
+      <nav class="main-nav" aria-label="Primary">
+        <a href="index.html" data-nav="home"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="therapy-hub.html" data-nav="therapy-hub"><i class="fa-solid fa-book-open"></i> Therapy Hub</a>
+        <a href="daily-planner.html" data-nav="daily-planner"><i class="fa-solid fa-calendar-days"></i> Daily
+          Planner</a>
+        <a href="find-a-therapist.html" data-nav="find-therapist" class="musa-link"><i
+            class="fa-solid fa-user-doctor"></i> Find a Therapist</a>
+        <a href="contact.html" data-nav="contact"><i class="fa-solid fa-envelope"></i> Contact</a>
+      </nav>
 
-      <div class="planner-tabs">
-        <button type="button" class="planner-tab active" data-panel="panel-schedule">Schedule</button>
-        <button type="button" class="planner-tab" data-panel="panel-goals">Goals</button>
-        <button type="button" class="planner-tab" data-panel="panel-mood">Mood &amp; energy</button>
-      </div>
-
-      <!-- Schedule -->
-      <div class="planner-panel active" id="panel-schedule">
-        <form class="add-task-form" id="add-task-form">
-          <input type="text" id="new-task-title" placeholder="Add a task, e.g. 'Practice one-handed dressing'" required>
-          <select id="new-task-slot">
-            <option>Morning</option><option>Afternoon</option><option>Evening</option><option>Night</option>
-          </select>
-          <select id="new-task-cat">
-            <option>ADL Routine</option><option>Therapy Exercise</option><option>Medication</option>
-            <option>Meals</option><option>Work &amp; Study</option><option>Rest Period</option>
-          </select>
-          <button type="submit" class="btn btn-teal btn-sm"><i class="fa-solid fa-plus"></i> Add task</button>
-        </form>
-        <div id="schedule-list"></div>
-      </div>
-
-      <!-- Goals -->
-      <div class="planner-panel" id="panel-goals">
-        <form class="add-task-form" id="add-goal-form">
-          <input type="text" id="new-goal-title" placeholder="Set a goal, e.g. 'Walk safely for 10 minutes'" required>
-          <input type="number" id="new-goal-target" placeholder="Target days" min="1" max="30" style="width:120px;">
-          <select id="new-goal-cat">
-            <option>ADLs</option><option>Fine motor</option><option>Mobility</option><option>Home safety</option>
-          </select>
-          <button type="submit" class="btn btn-teal btn-sm"><i class="fa-solid fa-plus"></i> Add goal</button>
-        </form>
-        <div id="goals-list"></div>
-      </div>
-
-      <!-- Mood & energy -->
-      <div class="planner-panel" id="panel-mood">
-        <form id="mood-form">
-          <p style="font-weight:700; font-size:0.86rem; margin-bottom:12px;">How are you feeling right now?</p>
-          <div class="mood-grid">
-            <button type="button" class="mood-opt" data-mood="Calm"><span class="emoji">😌</span>Calm</button>
-            <button type="button" class="mood-opt" data-mood="Empowered"><span class="emoji">💪</span>Empowered</button>
-            <button type="button" class="mood-opt" data-mood="Motivated"><span class="emoji">✨</span>Motivated</button>
-            <button type="button" class="mood-opt" data-mood="Tired"><span class="emoji">😴</span>Tired</button>
-            <button type="button" class="mood-opt" data-mood="Anxious"><span class="emoji">😟</span>Anxious</button>
-          </div>
-
-          <div class="slider-field">
-            <label for="energy-slider"><span>Energy level</span> <span id="energy-val">3/5</span></label>
-            <input type="range" id="energy-slider" min="1" max="5" value="3" oninput="document.getElementById('energy-val').textContent=this.value+'/5'">
-          </div>
-          <div class="slider-field">
-            <label for="fatigue-slider"><span>Fatigue level</span> <span id="fatigue-val">3/5</span></label>
-            <input type="range" id="fatigue-slider" min="1" max="5" value="3" oninput="document.getElementById('fatigue-val').textContent=this.value+'/5'">
-          </div>
-
-          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Log check-in</button>
-        </form>
-
-        <h4 style="margin:26px 0 10px; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--ink-500);">Recent check-ins</h4>
-        <div class="mood-log" id="mood-log"></div>
-      </div>
-
-    </div>
-  </div>
-</main>
-
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-top">
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <span class="pill-status"><i class="fa-solid fa-circle" style="color:var(--success-500); font-size:8px;"></i> System status: operational</span>
-        <span class="pill-status"><i class="fa-solid fa-shield-check" style="color:var(--teal-700);"></i> Screen reader &amp; voice assist active</span>
-      </div>
-      <div class="pill-status" style="background:none; border:none;">WCAG 2.1 AA design target</div>
-    </div>
-
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a href="index.html" class="brand"><span class="brand__mark"><i class="fa-solid fa-hand-holding-heart"></i></span><span class="brand__name">AbleSpace</span></a>
-        <p>AbleSpace is a digital occupational therapy companion that supports independence and everyday participation through education, routine tools, and AI-supported guidance.</p>
-        <div class="notice-box">
-          <i class="fa-solid fa-shield-heart"></i>
-          <span><strong>Healthcare notice:</strong> Musa and AbleSpace provide supportive educational resources only. They do not replace diagnosis, assessment, or treatment by a licensed occupational therapist.</span>
+      <div class="auth-actions">
+        <div data-auth-guest style="display:flex; gap:10px;">
+          <a href="login.html" class="btn btn-outline btn-sm"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+          <a href="signup.html" class="btn btn-teal btn-sm"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+        </div>
+        <div class="user-pill show" data-auth-user style="display:none">
+          <span class="user-pill__avatar" data-user-initial>G</span>
+          <span class="user-pill__name" data-user-name>Guest</span>
+          <button type="button" data-logout title="Log out"><i
+              class="fa-solid fa-arrow-right-from-bracket"></i></button>
         </div>
       </div>
-      <div>
-        <h4>Platform</h4>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="therapy-hub.html">Therapy Hub</a></li>
-          <li><a href="daily-planner.html">Daily Planner</a></li>
-          <li><a href="ask-musa.html">Ask Musa</a></li>
-          <li><a href="find-a-therapist.html">Find a Therapist</a></li>
-        </ul>
+
+      <button class="menu-toggle" data-menu-toggle aria-expanded="false" aria-label="Toggle menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+
+    <nav class="mobile-nav" data-mobile-nav aria-label="Mobile">
+      <a href="index.html" data-nav="home">Home</a>
+      <a href="therapy-hub.html" data-nav="therapy-hub">Therapy Hub</a>
+      <a href="daily-planner.html" data-nav="daily-planner">Daily Planner</a>
+      <a href="find-a-therapist.html" data-nav="find-therapist">Find a Therapist</a>
+      <a href="contact.html" data-nav="contact">Contact Us</a>
+      <div class="auth-actions">
+        <div data-auth-guest style="display:flex; gap:10px; width:100%;">
+          <a href="login.html" class="btn btn-outline btn-sm" style="flex:1">Login</a>
+          <a href="signup.html" class="btn btn-teal btn-sm" style="flex:1">Sign Up</a>
+        </div>
       </div>
-      <div>
-        <h4>Account</h4>
-        <ul>
-          <li><a href="login.html">Login</a></li>
-          <li><a href="signup.html">Sign up</a></li>
-          <li><a href="contact.html">Contact us</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Follow</h4>
-        <ul>
-          <li><a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a></li>
-          <li><a href="#"><i class="fa-brands fa-linkedin"></i> LinkedIn</a></li>
-          <li><a href="#"><i class="fa-brands fa-x-twitter"></i> X</a></li>
-        </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="page-hero">
+      <div class="container">
+        <span class="kicker"><i class="fa-solid fa-calendar-days"></i> Routine support</span>
+        <h1>Daily Planner</h1>
+        <p>Plan your day in a way that supports participation in the things that matter to you.</p>
       </div>
     </div>
 
-    <div class="footer-bottom">&copy; 2026 AbleSpace — a student project built with occupational therapy at its core. Not a substitute for professional medical advice.</div>
-  </div>
-</footer>
+    <div class="section planner-section-shell">
+      <div class="container daily-planner">
+        <section class="planner-header" aria-labelledby="planner-overview-heading">
+          <div class="planner-header__lead">
+            <p class="planner-salutation">Good morning!</p>
+            <h2 id="planner-overview-heading">Today's Plan — <span id="today-date-short"></span></h2>
+            <p>Plan your day around what matters most to you.</p>
+          </div>
 
-<script src="assets/js/main.js"></script>
-<script src="assets/js/planner.js"></script>
-<script src="assets/js/musa-engine.js"></script>
-<script src="assets/js/musa-widget.js"></script>
+          <div class="planner-header__stats" aria-label="Daily overview">
+            <article class="planner-stat-card">
+              <span class="planner-stat-card__label">Activities</span>
+              <strong id="overview-activities">0 / 0</strong>
+              <small>Planned today</small>
+            </article>
+            <article class="planner-stat-card">
+              <span class="planner-stat-card__label">Progress</span>
+              <strong id="overview-progress">0%</strong>
+              <small>Completed</small>
+            </article>
+            <article class="planner-stat-card">
+              <span class="planner-stat-card__label">Goals</span>
+              <strong id="overview-goals">0 / 3</strong>
+              <small>Set today</small>
+            </article>
+          </div>
+        </section>
+
+        <div class="planner-progress-wrap" aria-label="Daily progress">
+          <div class="planner-progress-track">
+            <span id="progress-bar" class="planner-progress-fill" style="width: 0%"></span>
+          </div>
+        </div>
+
+        <div class="planner-main-layout">
+          <div class="planner-main-column">
+            <div class="planner-actions">
+              <button id="btn-open-add" class="btn btn-primary" type="button"><i class="fa-solid fa-plus"></i> Add
+                Activity</button>
+              <div class="quick-add-row" aria-label="Quick add activities">
+                <button class="btn btn-outline quick-add" type="button" data-category="Self-Care">+ Self-Care</button>
+                <button class="btn btn-outline quick-add" type="button" data-category="Health &amp; Wellness">+ Therapy
+                  Activity</button>
+                <button class="btn btn-outline quick-add" type="button" data-category="Home Management">+ Meal</button>
+                <button class="btn btn-outline quick-add" type="button" data-category="Rest &amp; Sleep">+ Rest</button>
+                <button class="btn btn-outline quick-add" type="button" data-category="Education &amp; Work">+
+                  School/Work</button>
+                <button class="btn btn-outline quick-add" type="button" data-category="Leisure">+ Leisure</button>
+              </div>
+            </div>
+
+            <section class="planner-section" aria-labelledby="activities-heading">
+              <div class="section-heading-row">
+                <h3 id="activities-heading">Today's Activities</h3>
+              </div>
+              <div id="schedule-list" class="activity-list" aria-live="polite"></div>
+            </section>
+
+            <section class="planner-section" aria-labelledby="energy-planning-heading">
+              <h3 id="energy-planning-heading">Plan Around Your Energy</h3>
+              <p class="planner-section-copy">Different activities require different amounts of energy. Planning
+                demanding activities around your energy level can help you balance activity, rest, and participation
+                throughout the day.</p>
+              <div class="energy-card-grid">
+                <article class="energy-card">
+                  <span class="energy-card__tag">Low Energy</span>
+                  <ul>
+                    <li>Reading</li>
+                    <li>Listening to music</li>
+                    <li>Light grooming</li>
+                    <li>Rest</li>
+                    <li>Simple hobbies</li>
+                  </ul>
+                </article>
+                <article class="energy-card">
+                  <span class="energy-card__tag">Medium Energy</span>
+                  <ul>
+                    <li>Dressing</li>
+                    <li>Studying</li>
+                    <li>Simple meal preparation</li>
+                    <li>Light household activities</li>
+                  </ul>
+                </article>
+                <article class="energy-card">
+                  <span class="energy-card__tag">High Energy</span>
+                  <ul>
+                    <li>Cleaning</li>
+                    <li>Shopping</li>
+                    <li>Meal preparation</li>
+                    <li>Longer work/study sessions</li>
+                  </ul>
+                </article>
+              </div>
+            </section>
+
+            <section class="planner-section planner-section--soft" aria-labelledby="energy-tips-heading">
+              <h3 id="energy-tips-heading">Save Your Energy</h3>
+              <ul class="energy-tip-list">
+                <li>Plan important activities ahead.</li>
+                <li>Take appropriate rest breaks.</li>
+                <li>Avoid rushing.</li>
+                <li>Prioritize essential activities.</li>
+                <li>Break larger activities into smaller activities.</li>
+                <li>Alternate demanding activities with easier activities.</li>
+              </ul>
+            </section>
+          </div>
+
+          <aside class="planner-sidebar">
+            <section class="planner-sidebar-card" aria-labelledby="checkin-heading">
+              <h3 id="checkin-heading">Energy &amp; Mood Check-in</h3>
+              <form id="mood-form">
+                <div class="checkin-group">
+                  <label class="checkin-label">How are you feeling today?</label>
+                  <div class="checkin-options mood-options" role="radiogroup" aria-label="Mood selection">
+                    <button type="button" class="checkin-option mood-option" data-mood="Good">😊 Good</button>
+                    <button type="button" class="checkin-option mood-option" data-mood="Okay">😐 Okay</button>
+                    <button type="button" class="checkin-option mood-option" data-mood="Low">😔 Low</button>
+                    <button type="button" class="checkin-option mood-option" data-mood="Struggling">😣
+                      Struggling</button>
+                  </div>
+                </div>
+
+                <div class="checkin-group">
+                  <label class="checkin-label">How is your energy?</label>
+                  <div class="checkin-options energy-options" role="radiogroup" aria-label="Energy selection">
+                    <button type="button" class="checkin-option energy-option" data-energy="Low">🔋 Low</button>
+                    <button type="button" class="checkin-option energy-option" data-energy="Medium">🔋 Medium</button>
+                    <button type="button" class="checkin-option energy-option" data-energy="High">🔋 High</button>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Log Check-in</button>
+              </form>
+
+              <div id="checkin-result" class="checkin-result" aria-live="polite">
+                <div class="checkin-empty">No check-ins yet.</div>
+              </div>
+            </section>
+
+            <section class="planner-sidebar-card planner-goals" aria-labelledby="goals-heading">
+              <div class="section-heading-row compact">
+                <h3 id="goals-heading">Today's Goals</h3>
+                <span id="goals-summary" class="goals-summary">0 / 3 Goals Completed</span>
+              </div>
+              <div id="goals-list" class="goal-list"></div>
+              <button id="btn-add-goal" class="btn btn-outline btn-block" type="button">+ Add Goal</button>
+            </section>
+          </aside>
+        </div>
+
+        <section class="planner-glance" aria-labelledby="day-glance-heading">
+          <h3 id="day-glance-heading">Your Day at a Glance</h3>
+          <div class="glance-grid">
+            <article class="glance-item">
+              <span>Activities completed</span>
+              <strong id="glance-activities">0 / 0</strong>
+            </article>
+            <article class="glance-item">
+              <span>Goals completed</span>
+              <strong id="glance-goals">0 / 3</strong>
+            </article>
+            <article class="glance-item">
+              <span>Mood</span>
+              <strong id="glance-mood">—</strong>
+            </article>
+            <article class="glance-item">
+              <span>Energy</span>
+              <strong id="glance-energy">—</strong>
+            </article>
+          </div>
+          <p id="glance-message" class="glance-message">You made progress today. Every completed activity counts.</p>
+        </section>
+
+        <p class="planner-disclaimer">
+          <strong>AbleSpace provides general educational and organizational support.</strong> The Daily Planner does not
+          replace individualized assessment, treatment, or advice from a qualified Occupational Therapist or other
+          healthcare professional.
+        </p>
+      </div>
+    </div>
+
+    <div id="add-activity-modal" class="therapy-guide-modal" aria-hidden="true" style="display:none;">
+      <div class="therapy-guide-modal__backdrop" data-close-add></div>
+      <div class="therapy-guide-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="add-activity-title">
+        <button type="button" class="therapy-guide-modal__close" aria-label="Close" data-close-add><i
+            class="fa-solid fa-xmark"></i></button>
+        <div class="therapy-guide-modal__content">
+          <h3 id="add-activity-title">Add Activity</h3>
+          <form id="add-activity-form" novalidate>
+            <div class="form-field">
+              <label for="act-title">Activity name <span aria-hidden="true">*</span></label>
+              <input id="act-title" name="act-title" type="text" aria-required="true">
+            </div>
+
+            <div class="form-field">
+              <label for="act-category">Category <span aria-hidden="true">*</span></label>
+              <select id="act-category" name="act-category" aria-required="true">
+                <option value="">Select category</option>
+                <option>Self-Care</option>
+                <option>Home Management</option>
+                <option>Education &amp; Work</option>
+                <option>Health &amp; Wellness</option>
+                <option>Leisure</option>
+                <option>Social Participation</option>
+                <option>Rest &amp; Sleep</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label for="act-time">Time <span aria-hidden="true">*</span></label>
+              <input id="act-time" name="act-time" type="time" aria-required="true">
+            </div>
+
+            <div class="form-field-row">
+              <div class="form-field">
+                <label for="act-duration">Duration</label>
+                <select id="act-duration" name="act-duration">
+                  <option>10 minutes</option>
+                  <option>15 minutes</option>
+                  <option selected>30 minutes</option>
+                  <option>45 minutes</option>
+                  <option>1 hour</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="act-priority">Priority</label>
+                <select id="act-priority" name="act-priority">
+                  <option>High</option>
+                  <option selected>Medium</option>
+                  <option>Low</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-field-row">
+              <div class="form-field">
+                <label for="act-energy">Energy requirement</label>
+                <select id="act-energy" name="act-energy">
+                  <option>Low</option>
+                  <option selected>Medium</option>
+                  <option>High</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="act-notes">Notes (optional)</label>
+              <textarea id="act-notes" name="act-notes" rows="3"></textarea>
+            </div>
+
+            <div id="add-activity-error" class="planner-form-error" aria-live="polite"></div>
+
+            <div class="modal-actions">
+              <button type="submit" class="btn btn-primary">Add Activity</button>
+              <button type="button" class="btn btn-outline" data-close-add>Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="add-goal-modal" class="therapy-guide-modal" aria-hidden="true" style="display:none;">
+      <div class="therapy-guide-modal__backdrop" data-close-goal></div>
+      <div class="therapy-guide-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="add-goal-title">
+        <button type="button" class="therapy-guide-modal__close" aria-label="Close" data-close-goal><i
+            class="fa-solid fa-xmark"></i></button>
+        <div class="therapy-guide-modal__content">
+          <h3 id="add-goal-title">Add Goal</h3>
+          <form id="add-goal-form" novalidate>
+            <div class="form-field">
+              <label for="goal-title">What would you like to accomplish today? <span aria-hidden="true">*</span></label>
+              <input id="goal-title" name="goal-title" type="text">
+            </div>
+
+            <div id="add-goal-error" class="planner-form-error" aria-live="polite"></div>
+
+            <div class="modal-actions">
+              <button type="submit" class="btn btn-primary">Add Goal</button>
+              <button type="button" class="btn btn-outline" data-close-goal>Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="brand"><span class="brand__mark"><i
+                class="fa-solid fa-hand-holding-heart"></i></span><span class="brand__name">AbleSpace</span></a>
+          <p>AbleSpace is a digital occupational therapy companion that supports independence and everyday participation
+            through education, routine tools, and AI-supported guidance.</p>
+          <div class="notice-box">
+            <i class="fa-solid fa-shield-heart"></i>
+            <span><strong>Healthcare notice:</strong> Musa and AbleSpace provide supportive educational resources only.
+              They do not replace diagnosis, assessment, or treatment by a licensed occupational therapist.</span>
+          </div>
+        </div>
+        <div>
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="therapy-hub.html">Therapy Hub</a></li>
+            <li><a href="daily-planner.html">Daily Planner</a></li>
+            <li><a href="ask-musa.html">Ask Musa</a></li>
+            <li><a href="find-a-therapist.html">Find a Therapist</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Account</h4>
+          <ul>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="signup.html">Sign up</a></li>
+            <li><a href="contact.html">Contact us</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Follow</h4>
+          <ul>
+            <li><a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a></li>
+            <li><a href="#"><i class="fa-brands fa-linkedin"></i> LinkedIn</a></li>
+            <li><a href="#"><i class="fa-brands fa-x-twitter"></i> X</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">&copy; 2026 AbleSpace — a student project built with occupational therapy at its core.
+        Not a substitute for professional medical advice.</div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/planner.js"></script>
+  <script src="assets/js/musa-engine.js"></script>
+  <script src="assets/js/musa-widget.js"></script>
 </body>
+
 </html>
